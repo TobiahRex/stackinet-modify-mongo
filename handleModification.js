@@ -11,12 +11,19 @@ import { Promise as bbPromise } from 'bluebird';
 */
 export default ({ event, dbModels }) =>
 new Promise((resolve, reject) => {
-  console.log('\nSTART: Handling modification...');
+  console.log('\nSTART: Handling modification... ',
+  '\noperationName: ', event.body.operationName,
+  '\ncollectionName: ', event.body.collectionName,
+  '\ndbModels: ', Object.keys(dbModels));
+
   const { operationName, collectionName } = event.body;
 
   switch (operationName) {
     case 'dropCollection': {
-      dbModels[collectionName].remove({}).exec()
+      console.log('\ndropping collection...');
+      dbModels[collectionName]
+      .remove({})
+      .exec()
       .then((result) => {
         console.log('\nSuccessfully removed all Documents on the ', collectionName, ' collection.\nResult: ', result);
         resolve(result);
@@ -28,7 +35,9 @@ new Promise((resolve, reject) => {
     }; break;
 
     case 'delete': {
-      dbModels[collectionName].findByIdAndRemove(event.body.id).exec()
+      console.log('\ndeleting document...');
+      dbModels[collectionName]
+      .findByIdAndRemove(event.body.id).exec()
       .then((deletedDoc) => {
         console.log('\nSuccessfully removed _id: ', deletedDoc._id);
         resolve(deletedDoc);
@@ -39,6 +48,7 @@ new Promise((resolve, reject) => {
     }; break;
 
     case 'create': {
+      console.log('\ncreating document...');
       const createArgs = Object.assign({}, event.body);
       delete createArgs.operationName;
       delete createArgs.collectionName;
@@ -54,7 +64,9 @@ new Promise((resolve, reject) => {
     }; break;
 
     case 'udpate': {
-      dbModels[collectionName].findByIDAndUpdate(event.body.id, { $set: updateArgs }, { new: true })
+      console.log('\nupdating document...');
+      dbModels[collectionName]
+      .findByIDAndUpdate(event.body.id, { $set: updateArgs }, { new: true })
       .then((updatedDoc) => {
         console.log('\nSuccessfully udpated Document _id: ', updatedDoc._id, '\nUpdated Doc: ', JSON.stringify(updatedDoc, null, 2));
         resolve(updatedDoc);
@@ -64,5 +76,9 @@ new Promise((resolve, reject) => {
         reject(error);
       })
     }; break;
+    default: {
+      console.log('\n\nNo operation executed.  Verify input arguments.');
+      reject('No operation executed.  Verify input arguments.');
+    }
   }
 });

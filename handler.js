@@ -16,9 +16,9 @@ module.exports.modify = (event, context) => {
   }
 
   verifyDB(event.body.databaseName)
-  .then(dbCollections => {
+  .then(dbModels => {
     console.log('\nSuccessfully retrieved ', event.body.collectionName.toUpperCase(), ' on DB: ', event.body.databaseName.toUpperCase());
-    handleModification({ event, ...dbCollections })
+    handleModification({ event, ...dbModels })
   })
   .then((result) => {
     return context.succeed(JSON.stringify({ message: { ...result } })) && context.done();
