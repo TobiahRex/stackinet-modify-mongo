@@ -32,8 +32,8 @@ let cachedDb = {
 };
 
 const verifyDb = dbName =>
-new Promise((resolve) => {
-  switch(dbName) {
+new Promise((resolve, reject) => {
+  switch(dbName.toLowerCase()) {
     case 'lonesmoke': {
       if (
         cachedDb.lonesmokeConnection &&
@@ -46,13 +46,13 @@ new Promise((resolve) => {
         console.log('CREATED NEW Lonesmoke CONNECTION: ', connection, '\n\nmongoose.lonesmokeConnection.readyState: ', connection._readyState, '\n\nAll Lonesmoke Connections:', connection.base);
 
         cachedDb.lonesmokeConnection = connection;
-        cacheDb.lonesmokeDbModels = {
-          Email: createEmailModel(connection),
-          Complaint: createComplaintModel(connection),
-          MarketHero: createMarketHeroModel(connection),
-        };
-        console.log('\nSaved ', dbName, ' to "cachedDb".');
-        resolve(lonesmokeDbModels);
+        // cacheDb.lonesmokeDbModels = {
+        //   Email: createEmailModel(connection),
+        //   Complaint: createComplaintModel(connection),
+        //   MarketHero: createMarketHeroModel(connection),
+        // };
+        console.log('\nSaved ', dbName, ' to "cachedDb".\ncachedDb: ', cachedDb);
+        resolve(cachedDb.lonesmokeDbModels);
       }
     }; break;
     case 'nj2jp': {
@@ -71,7 +71,8 @@ new Promise((resolve) => {
           User: createUserModel(connection),
           Product: createProductModel(connection),
         };
-        resolve(nj2jpDbModels);
+        console.log('\nSaved ', dbName, ' to "cachedDb".');
+        resolve(cachedDb.nj2jpDbModels);
       }
     }; break;
     default: {

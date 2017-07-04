@@ -1,6 +1,6 @@
 /* eslint-disable no-use-before-define, no-console */
 import { Promise as bbPromise } from 'bluebird';
-import productSchema from '../schemas/productSchema';
+import productSchema from '../schemas/product';
 
 export default (db) => {
   productSchema.statics.findProductsByFlavor = flavor =>
@@ -154,6 +154,7 @@ export default (db) => {
     }));
   });
 
+  console.log('\n\nCreating Product collection...');
   const Product = db.model('Product', productSchema);
   return Product;
 };

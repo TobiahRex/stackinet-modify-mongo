@@ -28,7 +28,7 @@ export default (db) => {
       resolve();
     });
   });
-
+  console.log('\n\nCreating Compaint collection...');
   const Complaint = db.model('Complaint', complaintSchema);
   return Complaint;
 };

@@ -1,6 +1,6 @@
 /* eslint-disable no-use-before-define, no-console */
 import { Promise as bbPromise } from 'bluebird';
-import userSchema from '../schemas/userSchema';
+import userSchema from '../schemas/user';
 
 export default (db) => {
   userSchema.statics.fetchUserProfile = userId =>
@@ -169,6 +169,7 @@ export default (db) => {
     `));
   });
 
+  console.log('\n\nCreating User collection...');
   const User = db.model('User', userSchema);
   return User;
 };

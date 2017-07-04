@@ -110,7 +110,7 @@ export default (db) => {
       reject({ type: 'error', problem: { ...error } });
     });
   });
-
+  console.log('\n\nCreating MarketHero collection...');
   const MarketHero = db.model('MarketHero', marketHeroSchema);
   return MarketHero;
 };

@@ -141,7 +141,7 @@ export default (db) => {
       reject({ error: true, problem: { ...error } });
     });
   });
-
+  console.log('\n\nCreating Email collection...');
   const Email = db.model('Email', emailSchema);
   return Email;
 };
