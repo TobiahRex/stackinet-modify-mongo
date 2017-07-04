@@ -8,7 +8,7 @@
     "ModifyLogGroup": {
       "Type": "AWS::Logs::LogGroup",
       "Properties": {
-        "LogGroupName": "/aws/lambda/stakinet-modify-mongo-development-modify"
+        "LogGroupName": "/aws/lambda/stakinet-development-modify"
       }
     },
     "IamRoleLambdaExecution": {
@@ -37,7 +37,7 @@
                 "-",
                 [
                   "development",
-                  "stakinet-modify-mongo",
+                  "stakinet",
                   "lambda"
                 ]
               ]
@@ -52,7 +52,7 @@
                   ],
                   "Resource": [
                     {
-                      "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/stakinet-modify-mongo-development-modify:*"
+                      "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/stakinet-development-modify:*"
                     }
                   ]
                 },
@@ -63,7 +63,7 @@
                   ],
                   "Resource": [
                     {
-                      "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/stakinet-modify-mongo-development-modify:*:*"
+                      "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/stakinet-development-modify:*:*"
                     }
                   ]
                 }
@@ -76,7 +76,7 @@
           "Fn::Join": [
             "-",
             [
-              "stakinet-modify-mongo",
+              "stakinet",
               "development",
               "ap-northeast-1",
               "lambdaRole"
@@ -95,9 +95,9 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/stakinet-modify-mongo/development/1499183063167-2017-07-04T15:44:23.167Z/stakinet-modify-mongo.zip"
+          "S3Key": "serverless/stakinet/development/1499183824093-2017-07-04T15:57:04.093Z/stakinet.zip"
         },
-        "FunctionName": "stakinet-modify-mongo-development-modify",
+        "FunctionName": "stakinet-development-modify",
         "Handler": "handler.modify",
         "MemorySize": 1024,
         "Role": {
@@ -128,20 +128,20 @@
         "IamRoleLambdaExecution"
       ]
     },
-    "ModifyLambdaVersion7D7B7mlwAacOYgxl1hQv6TuyOfZRQv4tIvPyjxcL62k": {
+    "ModifyLambdaVersioniSxojvtyiVOajMaArJjB5FIAwTLvwUAiByzLywXYJ0": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "ModifyLambdaFunction"
         },
-        "CodeSha256": "7D7B7mlwAacOYgxl1hQv6TuyOfZRQv4tIvPyjxcL62k="
+        "CodeSha256": "iSxojvtyiVOajMaArJjB5FIAwTLv+wUAiByzLywXYJ0="
       }
     },
     "ApiGatewayRestApi": {
       "Type": "AWS::ApiGateway::RestApi",
       "Properties": {
-        "Name": "development-stakinet-modify-mongo"
+        "Name": "development-stakinet"
       }
     },
     "ApiGatewayResourceModify": {
@@ -386,7 +386,7 @@
         ]
       }
     },
-    "ApiGatewayDeployment1499183063222": {
+    "ApiGatewayDeployment1499183824146": {
       "Type": "AWS::ApiGateway::Deployment",
       "Properties": {
         "RestApiId": {
@@ -441,7 +441,7 @@
     "ModifyLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "ModifyLambdaVersion7D7B7mlwAacOYgxl1hQv6TuyOfZRQv4tIvPyjxcL62k"
+        "Ref": "ModifyLambdaVersioniSxojvtyiVOajMaArJjB5FIAwTLvwUAiByzLywXYJ0"
       }
     },
     "ServiceEndpoint": {

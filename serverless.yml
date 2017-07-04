@@ -1,4 +1,4 @@
-service: stakinet-modify-mongo
+service: stakinet
 
 package:
   exclude:

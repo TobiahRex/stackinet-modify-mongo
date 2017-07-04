@@ -18,7 +18,7 @@ module.exports.modify = (event, context) => {
   verifyDB(event.body.databaseName)
   .then(dbModels => {
     console.log('\nSuccessfully retrieved ', event.body.databaseName.toUpperCase(), '\ndbModels: ', dbModels);
-
+    dbModels.MarketHero.find({}).exec().then(console.log);
     handleModification({ event, dbModel: dbModels[event.body.collectionName] });
   })
   .then((result) => {
