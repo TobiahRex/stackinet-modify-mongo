@@ -95,7 +95,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/stakinet-mongo-modify/development/1499172132301-2017-07-04T12:42:12.301Z/stakinet-mongo-modify.zip"
+          "S3Key": "serverless/stakinet-mongo-modify/development/1499173136820-2017-07-04T12:58:56.820Z/stakinet-mongo-modify.zip"
         },
         "FunctionName": "stakinet-mongo-modify-development-mdodifyMongo",
         "Handler": "handler.mdodifyMongo",
@@ -109,7 +109,9 @@
         "Runtime": "nodejs6.10",
         "Timeout": 20,
         "Environment": {
-          "Variables": {}
+          "Variables": {
+            "LONESMOKE_MONGO_URI": "mongodb://stackinet:odV9WmWq1Tm752KO@stackinet-cluster-shard-00-00-wqafo.mongodb.net:27017,stackinet-cluster-shard-00-01-wqafo.mongodb.net:27017,stackinet-cluster-shard-00-02-wqafo.mongodb.net:27017/lonesmoke-development?ssl=true&replicaSet=stackinet-cluster-shard-0&authSource=admin"
+          }
         },
         "VpcConfig": {
           "SecurityGroupIds": [
@@ -125,14 +127,14 @@
         "IamRoleLambdaExecution"
       ]
     },
-    "MdodifyMongoLambdaVersionCSLJQitwELnLxHRbQKQPPhLln6LvhHKKmQG5Xg7dgw": {
+    "MdodifyMongoLambdaVersion7qicLtdBz3qrOQrvmzCKYWpAMObGmopZ0bmPRAxZU": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "MdodifyMongoLambdaFunction"
         },
-        "CodeSha256": "CSLJQitwELnLxHRbQKQPPhLln6LvhHKKmQG5+Xg7dgw="
+        "CodeSha256": "7qicLtdBz3qrOQrvmzCKYWpAMOb+Gm/opZ0bmPRAxZU="
       }
     },
     "ApiGatewayRestApi": {
@@ -383,7 +385,7 @@
         ]
       }
     },
-    "ApiGatewayDeployment1499172132357": {
+    "ApiGatewayDeployment1499173136875": {
       "Type": "AWS::ApiGateway::Deployment",
       "Properties": {
         "RestApiId": {
@@ -438,7 +440,7 @@
     "MdodifyMongoLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "MdodifyMongoLambdaVersionCSLJQitwELnLxHRbQKQPPhLln6LvhHKKmQG5Xg7dgw"
+        "Ref": "MdodifyMongoLambdaVersion7qicLtdBz3qrOQrvmzCKYWpAMObGmopZ0bmPRAxZU"
       }
     },
     "ServiceEndpoint": {

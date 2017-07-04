@@ -7,11 +7,15 @@ import verifyDB from './db/mongo/connection';
 module.exports.modifyMongo = (event, context) => {
   console.log('\nEVENT: ', JSON.stringify(event, null, 2));
 
-  if (!event.body.operationName || !event.body.collectionName) {
+  if (
+    !event.body.databaseName ||
+    !event.body.collectionName ||
+    !event.body.operationName
+  ) {
     return context.fail({ message: 'Missing required arguments.' }) && context.done();
   }
 
-  verifyDB()
+  verifyDB(event.body.databaseName)
   .then(dbCollections => handleModification(event, { ...dbCollections }))
   .then((result) => {
     return context.succeed(JSON.stringify({ message: { ...result } })) && context.done();
