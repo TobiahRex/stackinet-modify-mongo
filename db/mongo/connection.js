@@ -1,8 +1,8 @@
 /* eslint-disable no-console, no-constant-condition, no-unused-vars */
 import mongoose from 'mongoose';
-import createMarketHeroModel from './models/marketHero';
 import createEmailModel from './models/email';
 import createComplaintModel from './models/complaint';
+import createMarketHeroModel from './models/marketHero';
 import createProductModel from './models/product';
 import createUserModel from './models/user';
 
@@ -43,7 +43,7 @@ new Promise((resolve) => {
         resolve(cachedDb.lonesmokeDbModels);
       } else {
         const connection = mongoose.createConnection(lonesmokeMongo, console.log);
-        console.log('CREATED NEW Lonesmoke CONNECTION: ', connection, '\nmongoose.lonesmokeConnection.readyState: ', connection._readyState, '\nAll Lonesmoke Connections:', connection.base);
+        console.log('CREATED NEW Lonesmoke CONNECTION: ', connection, '\n\nmongoose.lonesmokeConnection.readyState: ', connection._readyState, '\n\nAll Lonesmoke Connections:', connection.base);
 
         cachedDb.lonesmokeConnection = connection;
         cacheDb.lonesmokeDbModels = {
@@ -51,6 +51,7 @@ new Promise((resolve) => {
           Complaint: createComplaintModel(connection),
           MarketHero: createMarketHeroModel(connection),
         };
+        console.log('\nSaved ', dbName, ' to "cachedDb".');
         resolve(lonesmokeDbModels);
       }
     }; break;

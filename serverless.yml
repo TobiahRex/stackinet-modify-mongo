@@ -1,4 +1,4 @@
-service: stakinet-mongo-modify
+service: stakinet-modify-mongo
 
 package:
   exclude:
@@ -14,7 +14,7 @@ provider:
   region: ap-northeast-1
   environment:
     LONESMOKE_MONGO_URI: ${file(./config.yml):lonesmokeMongoUri}
-    NJ2JP_MONGO_URI: ${file(./config.yml):nj2pMongoUri}
+    NJ2JP_MONGO_URI: ${file(./config.yml):nj2jpMongoUri}
 
 plugins:
   - serverless-webpack
@@ -23,8 +23,8 @@ custom:
   webpackIncludeModules: true # enable auto including node_modules
 
 functions:
-  mdodifyMongo:
-    handler: handler.mdodifyMongo
+  modify:
+    handler: handler.modify
     vpc:
       securityGroupIds:
         - ${file(./config.yml):securityGroupId}

@@ -11,9 +11,22 @@ import { Promise as bbPromise } from 'bluebird';
 */
 export default ({ event, dbModels }) =>
 new Promise((resolve, reject) => {
+  console.log('\nSTART: Handling modification...');
   const { operationName, collectionName } = event.body;
 
   switch (operationName) {
+    case 'dropCollection': {
+      dbModels[collectionName].remove({}).exec()
+      .then((result) => {
+        console.log('\nSuccessfully removed all Documents on the ', collectionName, ' collection.\nResult: ', result);
+        resolve(result);
+      })
+      .catch((error) => {
+        console.log('\nERROR trying to drop collection ', collectionName);
+        reject(error);
+      });
+    }; break;
+
     case 'delete': {
       dbModels[collectionName].findByIdAndRemove(event.body.id).exec()
       .then((deletedDoc) => {
@@ -24,6 +37,7 @@ new Promise((resolve, reject) => {
         console.log('\nCould not delete Document with _id: ', event.body.id);
       });
     }; break;
+
     case 'create': {
       const createArgs = Object.assign({}, event.body);
       delete createArgs.operationName;
@@ -38,6 +52,7 @@ new Promise((resolve, reject) => {
         reject(error);
       });
     }; break;
+
     case 'udpate': {
       dbModels[collectionName].findByIDAndUpdate(event.body.id, { $set: updateArgs }, { new: true })
       .then((updatedDoc) => {

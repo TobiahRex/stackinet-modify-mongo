@@ -5,10 +5,10 @@
     "ServerlessDeploymentBucket": {
       "Type": "AWS::S3::Bucket"
     },
-    "MdodifyMongoLogGroup": {
+    "ModifyLogGroup": {
       "Type": "AWS::Logs::LogGroup",
       "Properties": {
-        "LogGroupName": "/aws/lambda/stakinet-mongo-modify-development-mdodifyMongo"
+        "LogGroupName": "/aws/lambda/stakinet-modify-mongo-development-modify"
       }
     },
     "IamRoleLambdaExecution": {
@@ -37,7 +37,7 @@
                 "-",
                 [
                   "development",
-                  "stakinet-mongo-modify",
+                  "stakinet-modify-mongo",
                   "lambda"
                 ]
               ]
@@ -52,7 +52,7 @@
                   ],
                   "Resource": [
                     {
-                      "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/stakinet-mongo-modify-development-mdodifyMongo:*"
+                      "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/stakinet-modify-mongo-development-modify:*"
                     }
                   ]
                 },
@@ -63,7 +63,7 @@
                   ],
                   "Resource": [
                     {
-                      "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/stakinet-mongo-modify-development-mdodifyMongo:*:*"
+                      "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/stakinet-modify-mongo-development-modify:*:*"
                     }
                   ]
                 }
@@ -76,7 +76,7 @@
           "Fn::Join": [
             "-",
             [
-              "stakinet-mongo-modify",
+              "stakinet-modify-mongo",
               "development",
               "ap-northeast-1",
               "lambdaRole"
@@ -88,17 +88,17 @@
         ]
       }
     },
-    "MdodifyMongoLambdaFunction": {
+    "ModifyLambdaFunction": {
       "Type": "AWS::Lambda::Function",
       "Properties": {
         "Code": {
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/stakinet-mongo-modify/development/1499173136820-2017-07-04T12:58:56.820Z/stakinet-mongo-modify.zip"
+          "S3Key": "serverless/stakinet-modify-mongo/development/1499177030215-2017-07-04T14:03:50.215Z/stakinet-modify-mongo.zip"
         },
-        "FunctionName": "stakinet-mongo-modify-development-mdodifyMongo",
-        "Handler": "handler.mdodifyMongo",
+        "FunctionName": "stakinet-modify-mongo-development-modify",
+        "Handler": "handler.modify",
         "MemorySize": 1024,
         "Role": {
           "Fn::GetAtt": [
@@ -110,7 +110,8 @@
         "Timeout": 20,
         "Environment": {
           "Variables": {
-            "LONESMOKE_MONGO_URI": "mongodb://stackinet:odV9WmWq1Tm752KO@stackinet-cluster-shard-00-00-wqafo.mongodb.net:27017,stackinet-cluster-shard-00-01-wqafo.mongodb.net:27017,stackinet-cluster-shard-00-02-wqafo.mongodb.net:27017/lonesmoke-development?ssl=true&replicaSet=stackinet-cluster-shard-0&authSource=admin"
+            "LONESMOKE_MONGO_URI": "mongodb://stackinet:odV9WmWq1Tm752KO@stackinet-cluster-shard-00-00-wqafo.mongodb.net:27017,stackinet-cluster-shard-00-01-wqafo.mongodb.net:27017,stackinet-cluster-shard-00-02-wqafo.mongodb.net:27017/lonesmoke-development?ssl=true&replicaSet=stackinet-cluster-shard-0&authSource=admin",
+            "NJ2JP_MONGO_URI": "mongodb://stackinet:odV9WmWq1Tm752KO@stackinet-cluster-shard-00-00-wqafo.mongodb.net:27017,stackinet-cluster-shard-00-01-wqafo.mongodb.net:27017,stackinet-cluster-shard-00-02-wqafo.mongodb.net:27017/nj2jp-development?ssl=true&replicaSet=stackinet-cluster-shard-0&authSource=admin"
           }
         },
         "VpcConfig": {
@@ -123,24 +124,24 @@
         }
       },
       "DependsOn": [
-        "MdodifyMongoLogGroup",
+        "ModifyLogGroup",
         "IamRoleLambdaExecution"
       ]
     },
-    "MdodifyMongoLambdaVersion7qicLtdBz3qrOQrvmzCKYWpAMObGmopZ0bmPRAxZU": {
+    "ModifyLambdaVersioniXEOD9TmQeNuOPmpZX3qgdsgiwYem4yqMXpqRo": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
-          "Ref": "MdodifyMongoLambdaFunction"
+          "Ref": "ModifyLambdaFunction"
         },
-        "CodeSha256": "7qicLtdBz3qrOQrvmzCKYWpAMOb+Gm/opZ0bmPRAxZU="
+        "CodeSha256": "iXEOD9Tm+QeNuOP+mpZX3qgdsgiwYem4+yqMX+pq+Ro="
       }
     },
     "ApiGatewayRestApi": {
       "Type": "AWS::ApiGateway::RestApi",
       "Properties": {
-        "Name": "development-stakinet-mongo-modify"
+        "Name": "development-stakinet-modify-mongo"
       }
     },
     "ApiGatewayResourceModify": {
@@ -230,7 +231,7 @@
                 ":lambda:path/2015-03-31/functions/",
                 {
                   "Fn::GetAtt": [
-                    "MdodifyMongoLambdaFunction",
+                    "ModifyLambdaFunction",
                     "Arn"
                   ]
                 },
@@ -385,7 +386,7 @@
         ]
       }
     },
-    "ApiGatewayDeployment1499173136875": {
+    "ApiGatewayDeployment1499177030278": {
       "Type": "AWS::ApiGateway::Deployment",
       "Properties": {
         "RestApiId": {
@@ -397,12 +398,12 @@
         "ApiGatewayMethodModifyPost"
       ]
     },
-    "MdodifyMongoLambdaPermissionApiGateway": {
+    "ModifyLambdaPermissionApiGateway": {
       "Type": "AWS::Lambda::Permission",
       "Properties": {
         "FunctionName": {
           "Fn::GetAtt": [
-            "MdodifyMongoLambdaFunction",
+            "ModifyLambdaFunction",
             "Arn"
           ]
         },
@@ -437,10 +438,10 @@
         "Ref": "ServerlessDeploymentBucket"
       }
     },
-    "MdodifyMongoLambdaFunctionQualifiedArn": {
+    "ModifyLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "MdodifyMongoLambdaVersion7qicLtdBz3qrOQrvmzCKYWpAMObGmopZ0bmPRAxZU"
+        "Ref": "ModifyLambdaVersioniXEOD9TmQeNuOPmpZX3qgdsgiwYem4yqMXpqRo"
       }
     },
     "ServiceEndpoint": {
