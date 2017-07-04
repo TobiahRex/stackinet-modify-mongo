@@ -1,8 +1,7 @@
-/* eslint-disable global-require, import/imports-first, no-console, no-unused-expressions */
 if (!global._babelPolyfill) require('babel-polyfill');
 
 import { Promise as bbPromise } from 'bluebird';
-import handleModification from './services/handleModification';
+import handleModification from './handleModification';
 import verifyDB from './db/mongo/connection';
 
 module.exports.modifyMongo = (event, context) => {

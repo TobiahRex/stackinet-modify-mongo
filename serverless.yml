@@ -17,7 +17,6 @@ provider:
 
 plugins:
   - serverless-webpack
-  - serverless-eslint-plugin
 
 custom:
   webpackIncludeModules: true # enable auto including node_modules
@@ -43,7 +42,7 @@ functions:
           - logs:PutLogEvents
     events:
       - http:
-          path: modify-mongo
+          path: modify
           method: post
           integration: lambda
           memorySize: 256

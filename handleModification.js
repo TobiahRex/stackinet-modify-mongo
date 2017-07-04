@@ -1,7 +1,14 @@
-/* eslint-disable no-console */
-
 import { Promise as bbPromise } from 'bluebird';
 
+/**
+* 1) Dynamically create, update, or delete Documents on Mongo Collections.
+*
+* @param {object} event - Lambda event object.
+* - Keys: operationName, collectionName, {other Args for operation.}
+* @param {object} <Collections> - Mongo Collections containing documents to be mutated or created.
+*
+* @return {object} modified Document - Promises: resolved.
+*/
 export default ({ event, dbModels }) =>
 new Promise((resolve, reject) => {
   const { operationName, collectionName } = event.body;
@@ -32,12 +39,12 @@ new Promise((resolve, reject) => {
       });
     }; break;
     case 'udpate': {
-      dbModels[collectionName].findByIDAndUpdate(event.body.id, { $set: updateArgs, { new: true } })
+      dbModels[collectionName].findByIDAndUpdate(event.body.id, { $set: updateArgs }, { new: true })
       .then((updatedDoc) => {
         console.log('\nSuccessfully udpated Document _id: ', updatedDoc._id, '\nUpdated Doc: ', JSON.stringify(updatedDoc, null, 2));
         resolve(updatedDoc);
       })
-      catch((error) => {
+      .catch((error) => {
         console.log('\nERROR while trying to update document with _id: ', event.body.id, '\nCheck arguments: ', JSON.stringify(updateArgs, null, 2));
         reject(error);
       })
