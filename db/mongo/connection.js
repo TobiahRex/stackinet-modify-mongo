@@ -43,16 +43,16 @@ new Promise((resolve, reject) => {
         resolve(cachedDb.lonesmokeDbModels);
       } else {
         const connection = mongoose.createConnection(lonesmokeMongo, console.log);
-        console.log('CREATED NEW Lonesmoke CONNECTION: ', connection, '\n\nmongoose.lonesmokeConnection.readyState: ', connection._readyState, '\n\nAll Lonesmoke Connections:', connection.base);
+        console.log('CREATED NEW Lonesmoke CONNECTION: ', connection);
 
         cachedDb = {
-          ...cacheDB,
-          loneSmokeConnection: connection,
-          // lonesmokeDbModels: {
-          //   Email: createEmailModel(connection),
-          //   Complaint: createComplaintModel(connection),
-          //   MarketHero: createMarketHeroModel(connection),
-          // }
+          ...cachedDb,
+          lonesmokeConnection: connection,
+          lonesmokeDbModels: {
+            Email: createEmailModel(connection),
+            Complaint: createComplaintModel(connection),
+            MarketHero: createMarketHeroModel(connection),
+          }
         }
         console.log('\nSaved ', dbName, ' to "cachedDb".\ncachedDb: ', cachedDb);
         resolve(cachedDb.lonesmokeDbModels);
@@ -67,7 +67,7 @@ new Promise((resolve, reject) => {
         resolve(cachedDb.nj2jpDbModels);
       } else {
         const connection = mongoose.createConnection(MONGO_DB, console.log);
-        console.log('CREATED NEW CONNECTION: ', connection, '\nmongoose.connection.readyState: ', connection._readyState, '\nAll Connections:', connection.base);
+        console.log('CREATED NEW CONNECTION: ', connection);
 
         cachedDb = {
           ...cacheDB,
@@ -77,6 +77,7 @@ new Promise((resolve, reject) => {
             Product: createProductModel(connection),
           }
         }
+
         console.log('\nSaved ', dbName, ' to "cachedDb".');
         resolve(cachedDb.nj2jpDbModels);
       }
