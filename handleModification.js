@@ -11,13 +11,19 @@ import { Promise as bbPromise } from 'bluebird';
 */
 export default ({ event, dbModel }) =>
 new Promise((resolve, reject) => {
-  console.log('\nSTART: Handling modification... ', '\noperationName: ', event.body.operationName, '\ncollectionName: ', event.body.collectionName, '\ndbModel: ', dbModel);
+  console.log('\nSTART: Handling modification... ', '\noperationName: ', event.body.operationName, '\ncollectionName: ', event.body.collectionName, '\n\ndbModel: ', dbModel);
 
   const { operationName, collectionName } = event.body;
 
   switch (operationName) {
     case 'dropCollection': {
       console.log('\ndropping collection...');
+      console.log('dbModel.find: ', dbModel.find);
+      dbModel.find({}, (error, results ) =>{
+        console.log('\nerror: ', error);
+        console.console.log('\nresults: ', results);
+      });
+
       bbPromise.fromCallback(cb => dbModel.remove({}, cb))
       .then((result) => {
         console.log('\nSuccessfully removed all Documents on the ', collectionName, ' collection.\nResult: ', result);
