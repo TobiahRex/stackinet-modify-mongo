@@ -9,19 +9,16 @@ import { Promise as bbPromise } from 'bluebird';
 *
 * @return {object} modified Document - Promises: resolved.
 */
-export default ({ event, dbModels }) =>
+export default ({ event, dbModel }) =>
 new Promise((resolve, reject) => {
-  console.log('\nSTART: Handling modification... ',
-  '\noperationName: ', event.body.operationName,
-  '\ncollectionName: ', event.body.collectionName,
-  '\ndbModels: ', Object.keys(dbModels));
+  console.log('\nSTART: Handling modification... ', '\noperationName: ', event.body.operationName, '\ncollectionName: ', event.body.collectionName, '\ndbModel: ', dbModel);
 
   const { operationName, collectionName } = event.body;
 
   switch (operationName) {
     case 'dropCollection': {
       console.log('\ndropping collection...');
-      dbModels[collectionName]
+      dbModel
       .remove({})
       .exec()
       .then((result) => {
@@ -36,7 +33,7 @@ new Promise((resolve, reject) => {
 
     case 'delete': {
       console.log('\ndeleting document...');
-      dbModels[collectionName]
+      dbModel
       .findByIdAndRemove(event.body.id).exec()
       .then((deletedDoc) => {
         console.log('\nSuccessfully removed _id: ', deletedDoc._id);
@@ -52,7 +49,7 @@ new Promise((resolve, reject) => {
       const createArgs = Object.assign({}, event.body);
       delete createArgs.operationName;
       delete createArgs.collectionName;
-      bbPromise.fromCallback(cb => dbModels[collectionName].create({ ...createArgs }))
+      bbPromise.fromCallback(cb => dbModel.create({ ...createArgs }))
       .then((newDoc) => {
         console.log('Successfully create a new document on collection: ', event.body.collectionName);
         resolve(newDoc);
@@ -65,7 +62,7 @@ new Promise((resolve, reject) => {
 
     case 'udpate': {
       console.log('\nupdating document...');
-      dbModels[collectionName]
+      dbModel
       .findByIDAndUpdate(event.body.id, { $set: updateArgs }, { new: true })
       .then((updatedDoc) => {
         console.log('\nSuccessfully udpated Document _id: ', updatedDoc._id, '\nUpdated Doc: ', JSON.stringify(updatedDoc, null, 2));
