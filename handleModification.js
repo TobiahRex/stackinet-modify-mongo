@@ -18,9 +18,7 @@ new Promise((resolve, reject) => {
   switch (operationName) {
     case 'dropCollection': {
       console.log('\ndropping collection...');
-      dbModel
-      .remove({})
-      .exec()
+      bbPromise.fromCallback(cb => dbModel.remove({}, cb))
       .then((result) => {
         console.log('\nSuccessfully removed all Documents on the ', collectionName, ' collection.\nResult: ', result);
         resolve(result);
@@ -29,6 +27,18 @@ new Promise((resolve, reject) => {
         console.log('\nERROR trying to drop collection ', collectionName);
         reject(error);
       });
+      // dbModel
+      // .remove({})
+      // .exec()
+      // .then((result) => {
+      //   console.log('\nSuccessfully removed all Documents on the ', collectionName, ' collection.\nResult: ', result);
+      //   resolve(result);
+      // })
+      // .catch((error) => {
+      //   console.log('\nERROR trying to drop collection ', collectionName);
+      //   reject(error);
+      // });
+      reject('Did not successfully drop collection.');
     }; break;
 
     case 'delete': {
