@@ -45,12 +45,15 @@ new Promise((resolve, reject) => {
         const connection = mongoose.createConnection(lonesmokeMongo, console.log);
         console.log('CREATED NEW Lonesmoke CONNECTION: ', connection, '\n\nmongoose.lonesmokeConnection.readyState: ', connection._readyState, '\n\nAll Lonesmoke Connections:', connection.base);
 
-        cachedDb.lonesmokeConnection = connection;
-        // cacheDb.lonesmokeDbModels = {
-        //   Email: createEmailModel(connection),
-        //   Complaint: createComplaintModel(connection),
-        //   MarketHero: createMarketHeroModel(connection),
-        // };
+        cachedDb = {
+          ...cacheDB,
+          loneSmokeConnection: connection,
+          // lonesmokeDbModels: {
+          //   Email: createEmailModel(connection),
+          //   Complaint: createComplaintModel(connection),
+          //   MarketHero: createMarketHeroModel(connection),
+          // }
+        }
         console.log('\nSaved ', dbName, ' to "cachedDb".\ncachedDb: ', cachedDb);
         resolve(cachedDb.lonesmokeDbModels);
       }
@@ -66,11 +69,14 @@ new Promise((resolve, reject) => {
         const connection = mongoose.createConnection(MONGO_DB, console.log);
         console.log('CREATED NEW CONNECTION: ', connection, '\nmongoose.connection.readyState: ', connection._readyState, '\nAll Connections:', connection.base);
 
-        cachedDb.nj2jpConnection = connection;
-        cacheDb.nj2jpDbModels = {
-          User: createUserModel(connection),
-          Product: createProductModel(connection),
-        };
+        cachedDb = {
+          ...cacheDB,
+          nj2jpConnection: connection,
+          nj2jpDbModels: {
+            User: createUserModel(connection),
+            Product: createProductModel(connection),
+          }
+        }
         console.log('\nSaved ', dbName, ' to "cachedDb".');
         resolve(cachedDb.nj2jpDbModels);
       }
