@@ -28,6 +28,8 @@ export default (db) => {
     delete eventBody.databaseName;
     delete eventBody.operationName;
 
+    if (!id || !eventBody) return reject(`Missing required arguments. "id": ${id || 'undefined'} | "eventBody": ${eventBody || 'undefined'}`);
+
     const updateArgs = Object.assign({}, eventBody);
     MarketHero
     .findByIdAndUpdate(id, { $set: updateArgs }, { new: true })
