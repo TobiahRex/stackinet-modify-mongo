@@ -27,7 +27,8 @@ export default (db) => {
     if (!eventBody) return reject(`Missing required arguments. "id": ${id || 'undefined'}`);
 
     MarketHero
-    .findByIdAndRemove(event.body.id).exec()
+    .findByIdAndRemove(event.body.id)
+    .exec()
     .then((deletedDoc) => {
       console.log('\nSuccessfully removed _id: ', deletedDoc._id);
       resolve(deletedDoc);
@@ -36,7 +37,6 @@ export default (db) => {
       console.log('\nCould not delete Document with _id: ', event.body.id, '\nERROR: ', error);
     });
   });
-
 
   marketHeroSchema.statics.updateDoc = (eventBody) =>
   new Promise((resolve, reject) => {

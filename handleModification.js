@@ -41,7 +41,7 @@ new Promise((resolve, reject) => {
       .then(resolve)
       .catch(reject);
     }
-    //
+
     // case 'create': {
     //   console.log('\ncreating document...');
     //   const createArgs = Object.assign({}, event.body);
@@ -58,24 +58,7 @@ new Promise((resolve, reject) => {
     //     reject(error);
     //   });
     // } break;
-    //
-    // case 'udpate': {
-    //   console.log('\nupdating document...');
-    //   const updateArgs = Object.assign({}, event.body);
-    //   delete updateArgs.databaseName;
-    //   delete updateArgs.operationName;
-    //   delete updateArgs.collectionName;
-    //   dbModel
-    //   .findByIdAndUpdate(event.body.id, { $set: updateArgs }, { new: true })
-    //   .then((updatedDoc) => {
-    //     console.log('\nSuccessfully udpated Document _id: ', updatedDoc._id, '\nUpdated Doc: ', JSON.stringify(updatedDoc, null, 2));
-    //     resolve(updatedDoc);
-    //   })
-    //   .catch((error) => {
-    //     console.log('\nERROR while trying to update document with _id: ', event.body.id, '\nCheck arguments: ', JSON.stringify(updateArgs, null, 2));
-    //     reject(error);
-    //   });
-    // } break;
+
     default: {
       console.log('\n\nNo operation executed.  Verify input arguments.');
       reject('No operation executed.  Verify input arguments.');

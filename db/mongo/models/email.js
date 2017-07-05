@@ -59,102 +59,56 @@ export default (db) => {
     }
   });
 
-  /**
-  * 1) Find all emails with type.
-  * 2) Filter results by request language.
-  *
-  * @param {string} type - The email type to find.
-  * @param {string} requestedLangauge - The language to filter by.
-  *
-  * @return {object} - Promise: resolved - Email details.
-  */
-  emailSchema.statics.findEmailAndFilterLanguage = (type, reqLanguage) =>
+  emailSchema.statics.removeOne = ({ id }) =>
   new Promise((resolve, reject) => {
-    Email.find(type)
+    if (!eventBody) return reject(`Missing required arguments. "id": ${id || 'undefined'}`);
+
+    Email
+    .findByIdAndRemove(event.body.id)
     .exec()
-    .then((dbEmails) => {
-      console.log('\nFound the following emails with type: ', type, '\ndbEmails: ', dbEmails);
-      if (!dbEmails) {
-        console.log('Error: \nDid not find any emails with type: "', type, '"');
-        reject({ type: 'error', problem: `Did not find any emails with type: ${type}` });
-      }
-
-      const foundEmail = dbEmails.filter(dbEmail => dbEmail.language === reqLanguage)[0];
-
-      if (!foundEmail) {
-        console.log('Error: \nDid not find email with language: "', reqLanguage, '"');
-        reject({ type: 'error', problem: `After filtering emails of type "${type}", there was no email that matched language: "${reqLanguage}"` });
-      }
-      resolve(foundEmail);
+    .then((deletedDoc) => {
+      console.log('\nSuccessfully removed _id: ', deletedDoc._id);
+      resolve(deletedDoc);
     })
     .catch((error) => {
-      console.log('Could not filter emails: ', error);
-      reject({ type: 'error', problem: { ...error } });
+      console.log('\nCould not delete Document with _id: ', event.body.id, '\nERROR: ', error);
     });
   });
 
-  /**
-  * 1) Determine if the userEmail has already been sent a discount by checking Market Hero collection.
-  * 2a) If found, send a Rejection Email.
-  * 2b) If not found, verify user has not added classified our application emails as "spam" since last message had been sent.
-  * 3a) If email has not been added to Complaint collection, send the user a Discount email.
-  *
-  * @param {string} to - recipients email address.
-  * @param {object} emailDoc - Mongo Email collection, Document.
-  *
-  * @return {object} - Promise: resolved - email type sent.
-  */
-  emailSchema.statics.sendEmail = (to, emailDoc) =>
+  emailSchema.statics.updateDoc = (eventBody) =>
   new Promise((resolve, reject) => {
-    if (!isEmail(to)) {
-      console.log('ERROR @ sendEmail: \n\'', to, '\' is not a valid email address.');
-      reject({ error: true, problem: 'Did not submit a valid email address. Please try again.' });
-    }
+    if (!eventBody) return reject(`Missing required arguments. "eventBody": ${eventBody || 'undefined'}`);
 
-    const emailParams = {
-      Destination: {
-        ToAddresses: [to],
-      },
-      Source: emailDoc.replyToAddress,
-      ReplyToAddresses: [emailDoc.replyToAddress],
-      Message: {
-        Body: {
-          Html: {
-            Data: emailDoc.bodyHtmlData,
-            Charset: emailDoc.bodyHtmlCharset,
-          },
-          Text: {
-            Data: emailDoc.bodyTextData,
-            Charset: emailDoc.bodyTextCharset,
-          },
-        },
-        Subject: {
-          Data: emailDoc.subjectData,
-          Charset: emailDoc.subjectCharset,
-        },
-      },
-    };
+    delete eventBody.collectionName;
+    delete eventBody.databaseName;
+    delete eventBody.operationName;
 
-    console.log('\nSending AWS ses email...');
-    bbPromise.fromCallback(cb => ses.sendEmail(emailParams, cb))
-    .then((data) => {
-      console.log('\nSuccessfully sent SES email: \n', data, '\nSaving record of email sent to Email Document...');
-      emailDoc.sentEmails.push({ messageId: data.MessageId });
-      emailDoc.save({ new: true })
-      .then((savedEmail) => {
-        console.log('\nSuccessfully updated "messageId" with value: \n', savedEmail.sentEmails.pop().messageId);
+    const updateArgs = Object.assign({}, eventBody);
+    Object.keys(updateArgs)
+    .forEach(key => {
+      if (/\[\]/gi.test(updateArgs[key])) {
+        try {
+          updateArgs[key] = JSON.parse(updateArgs[key]);
+        } catch (error) {
+          reject(`ERROR while trying to parse input string array into array literal.  ERROR = ${error}.`);
+          return null;
+        }
+      }
+    });
 
-        resolve({
-          statusCode: 200,
-          body: JSON.stringify({ message: 'Mail sent successfully.' }),
-        });
-      });
+    Email
+    .findByIdAndUpdate({ _id: eventBody.id }, { $set: updateArgs }, { new: true })
+    .exec()
+    .then((result) => {
+      console.log(`Successfully updated collection ${collectionName}.  RESULT = ${result}`);
+      return resolve(result);
     })
     .catch((error) => {
-      console.log('\nERROR sending SES email with type: "', emailDoc.type, '"\nError = ', error, '\n', error.stack);
-      reject({ error: true, problem: { ...error } });
+      console.log(`Error trying to update collection "${collectionName}".  ERROR = ${error}`);
+      return reject(error);
     });
   });
+
   console.log('\n\nCreating Email collection...');
   const Email = db.model('Email', emailSchema);
   return Email;
