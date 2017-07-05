@@ -95,7 +95,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/stakinet/development/1499273746015-2017-07-05T16:55:46.015Z/stakinet.zip"
+          "S3Key": "serverless/stakinet/development/1499274413382-2017-07-05T17:06:53.382Z/stakinet.zip"
         },
         "FunctionName": "stakinet-development-modifyMongo",
         "Handler": "handler.modifyMongo",
@@ -128,14 +128,14 @@
         "IamRoleLambdaExecution"
       ]
     },
-    "ModifyMongoLambdaVersionzB60eLZdd6l5cMa7gqCr53tHBZPYgh2cZIqu6GKOzCc": {
+    "ModifyMongoLambdaVersionp31F0Jxdz99G65GN1Kkbb7tnYzDjo0OFP78TFJGPgD8": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "ModifyMongoLambdaFunction"
         },
-        "CodeSha256": "zB60eLZdd6l5cMa7gqCr53tHBZPYgh2cZIqu6GKOzCc="
+        "CodeSha256": "p31F0Jxdz99G65GN1Kkbb7tnYzDjo0OFP78TFJGPgD8="
       }
     },
     "ApiGatewayRestApi": {
@@ -386,7 +386,7 @@
         ]
       }
     },
-    "ApiGatewayDeployment1499273746069": {
+    "ApiGatewayDeployment1499274413435": {
       "Type": "AWS::ApiGateway::Deployment",
       "Properties": {
         "RestApiId": {
@@ -441,7 +441,7 @@
     "ModifyMongoLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "ModifyMongoLambdaVersionzB60eLZdd6l5cMa7gqCr53tHBZPYgh2cZIqu6GKOzCc"
+        "Ref": "ModifyMongoLambdaVersionp31F0Jxdz99G65GN1Kkbb7tnYzDjo0OFP78TFJGPgD8"
       }
     },
     "ServiceEndpoint": {

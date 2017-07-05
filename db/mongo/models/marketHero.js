@@ -22,13 +22,29 @@ export default (db) => {
     });
   });
 
-  marketHeroSchema.statics.updateDoc = (id, eventBody) =>
+  marketHeroSchema.statics.removeOne = ({ id }) =>
   new Promise((resolve, reject) => {
+    if (!eventBody) return reject(`Missing required arguments. "id": ${id || 'undefined'}`);
+
+    MarketHero
+    .findByIdAndRemove(event.body.id).exec()
+    .then((deletedDoc) => {
+      console.log('\nSuccessfully removed _id: ', deletedDoc._id);
+      resolve(deletedDoc);
+    })
+    .catch((error) => {
+      console.log('\nCould not delete Document with _id: ', event.body.id, '\nERROR: ', error);
+    });
+  });
+
+
+  marketHeroSchema.statics.updateDoc = (eventBody) =>
+  new Promise((resolve, reject) => {
+    if (!eventBody) return reject(`Missing required arguments. "eventBody": ${eventBody || 'undefined'}`);
+
     delete eventBody.collectionName;
     delete eventBody.databaseName;
     delete eventBody.operationName;
-
-    if (!id || !eventBody) return reject(`Missing required arguments. "id": ${id || 'undefined'} | "eventBody": ${eventBody || 'undefined'}`);
 
     const updateArgs = Object.assign({}, eventBody);
     MarketHero

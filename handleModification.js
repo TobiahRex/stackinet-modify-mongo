@@ -20,31 +20,27 @@ new Promise((resolve, reject) => {
   const { operationName, collectionName } = event.body;
   console.log('event: ', event);
 
-  return dbModels[collectionName]
-  .dropCollection()
-  .then(resolve)
-  .catch(reject);
-  // switch (operationName) {
-  //   case 'dropCollection': {
-  //     const Model = dbModels[collectionName];
-  //     console.log('Model.find: ', Model.find);
-  //     // .dropCollection(collectionName)
-  //     // .then(resolve)
-  //     // .catch(reject);
-  //   } break;
+  switch (operationName) {
+    case 'dropCollection': {
+      return dbModels[collectionName]
+      .dropCollection()
+      .then(resolve)
+      .catch(reject);
+    }
 
-    // case 'delete': {
-    //   console.log('\ndeleting document...');
-    //   dbModel
-    //   .findByIdAndRemove(event.body.id).exec()
-    //   .then((deletedDoc) => {
-    //     console.log('\nSuccessfully removed _id: ', deletedDoc._id);
-    //     resolve(deletedDoc);
-    //   })
-    //   .catch((error) => {
-    //     console.log('\nCould not delete Document with _id: ', event.body.id, '\nERROR: ', error);
-    //   });
-    // } break;
+    case 'deleteOne': {
+      return dbModels[collectionName]
+      .removeOne(event.body)
+      .then(resolve)
+      .catch(reject);
+    }
+
+    case 'updateDoc': {
+      return dbModels[collectionName]
+      .updateDoc(event.body)
+      .then(resolve)
+      .catch(reject);
+    }
     //
     // case 'create': {
     //   console.log('\ncreating document...');
@@ -80,11 +76,10 @@ new Promise((resolve, reject) => {
     //     reject(error);
     //   });
     // } break;
-  //   default: {
-  //     console.log('\n\nNo operation executed.  Verify input arguments.');
-  //     reject('No operation executed.  Verify input arguments.');
-  //   }
-  // }
-  // console.log('YOU SHOULDN\'T SEE ME');
-  // reject('No operation found.');
+    default: {
+      console.log('\n\nNo operation executed.  Verify input arguments.');
+      reject('No operation executed.  Verify input arguments.');
+    }
+  }
+  reject(`operationName: ${operationName} does not exist.`);
 });
