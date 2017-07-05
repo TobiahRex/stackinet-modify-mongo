@@ -16,9 +16,9 @@ const ses = new AWS.SES();
 export default (db) => {
   emailSchema.statics.dropCollection  = collectionName =>
   new Promise((resolve, reject) => {
-    Email
-    .remove({})
-    .exec()
+    console.log('\nDropping ', collectionName, ' collection...');
+
+    return bbPromise.fromCallback(cb => Email.remove({}, cb))
     .then((result) => {
       console.log('\nSuccessfully removed all Documents on the ', collectionName, ' collection.\nResult: ', result);
       resolve(result);

@@ -15,16 +15,13 @@ module.exports.modifyMongo = (event, context) => {
     return context.fail({ message: 'Missing required arguments.' }) && context.done();
   }
 
-  verifyDB(event.body.databaseName)
-  .then(dbModels => {
-    console.log('\nSuccessfully retrieved ', event.body.databaseName.toUpperCase(), '\ndbModels: ', dbModels);
-    handleModification({ event, dbModel: dbModels[event.body.collectionName] });
-  })
+  return verifyDB(event.body.databaseName)
+  .then(dbResults => handleModification({ event, ...dbResults }))
   .then((result) => {
-    return context.succeed(JSON.stringify({ message: { ...result } })) && context.done();
+    return context.succeed(result) && context.done();
   })
   .catch((error) => {
     console.log('\nFINAL ERROR: \n', JSON.stringify(error, null, 2));
-    return context.fail(JSON.stringify({ message: 'Mongo Cluster modification failed', ...error })) && context.done();
+    return context.fail(`Mongo cluster modification failed. ERROR: ${error}`) && context.done();
   });
 }

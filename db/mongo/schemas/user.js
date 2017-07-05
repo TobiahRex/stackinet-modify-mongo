@@ -92,5 +92,5 @@ const userSchema = new Schema({
     twitter: { type: String },
     linkedin: { type: String },
   },
-});
+}, { bufferCommands: true });
 export default userSchema;

@@ -6,5 +6,5 @@ const complaintSchema = new Schema({
     created: { type: Date, default: Date.now },
     messageId: { type: String, required: true },
   },
-});
+}, { bufferCommands: true });
 export default complaintSchema;

@@ -18,5 +18,5 @@ const emailSchema = new Schema({
     messageId: { type: String },
     sesStatus: { type: String },
   }],
-});
+}, { bufferCommands: true });
 export default emailSchema;

@@ -1,0 +1,18 @@
+# nodeJS stuff
+node_modules
+
+# Build files
+dist
+public
+
+# serverless
+config.yml
+config.json
+.serverless
+
+# miscellaneous
+.DS_Store
+.sass-cache
+.env
+npm-debug.log
+_syntax_tests.js
