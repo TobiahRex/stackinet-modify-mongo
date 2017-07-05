@@ -23,8 +23,8 @@ custom:
   webpackIncludeModules: true # enable auto including node_modules
 
 functions:
-  modify:
-    handler: handler.modify
+  modifyMongo:
+    handler: handler.modifyMongo
     vpc:
       securityGroupIds:
         - ${file(./config.yml):securityGroupId}

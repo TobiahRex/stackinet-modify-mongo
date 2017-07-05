@@ -5,6 +5,21 @@ import marketHeroSchema from '../schemas/marketHero';
 require('dotenv').load({ silent: true });
 
 export default (db) => {
+  marketHeroSchema.statics.dropCollection  = collectionName =>
+  new Promise((resolve, reject) => {
+
+    MarketHero
+    .remove({})
+    .exec()
+    .then((result) => {
+      console.log('\nSuccessfully removed all Documents on the ', collectionName, ' collection.\nResult: ', result);
+      resolve(result);
+    })
+    .catch((error) => {
+      console.log('\nERROR trying to drop collection ', collectionName);
+      reject(error);
+    });
+  });
   /**
   * 1) Determines if email is already saved to MarketHero collection.
   *

@@ -59,6 +59,7 @@ new Promise((resolve, reject) => {
       }
     }; break;
     case 'nj2jp': {
+      console.log('\nhello nj2jp switch case');
       if (
         cachedDb.nj2jpConnection &&
         (cachedDb.nj2jpConnection._readyState === 1)
@@ -68,7 +69,7 @@ new Promise((resolve, reject) => {
       } else {
         const connection = mongoose.createConnection(MONGO_DB, console.log);
         console.log('CREATED NEW CONNECTION: ', connection);
-
+        
         cachedDb = {
           ...cacheDB,
           nj2jpConnection: connection,

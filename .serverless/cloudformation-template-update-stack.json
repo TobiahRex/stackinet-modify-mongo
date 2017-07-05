@@ -5,10 +5,10 @@
     "ServerlessDeploymentBucket": {
       "Type": "AWS::S3::Bucket"
     },
-    "ModifyLogGroup": {
+    "ModifyMongoLogGroup": {
       "Type": "AWS::Logs::LogGroup",
       "Properties": {
-        "LogGroupName": "/aws/lambda/stakinet-development-modify"
+        "LogGroupName": "/aws/lambda/stakinet-development-modifyMongo"
       }
     },
     "IamRoleLambdaExecution": {
@@ -52,7 +52,7 @@
                   ],
                   "Resource": [
                     {
-                      "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/stakinet-development-modify:*"
+                      "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/stakinet-development-modifyMongo:*"
                     }
                   ]
                 },
@@ -63,7 +63,7 @@
                   ],
                   "Resource": [
                     {
-                      "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/stakinet-development-modify:*:*"
+                      "Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/stakinet-development-modifyMongo:*:*"
                     }
                   ]
                 }
@@ -88,17 +88,17 @@
         ]
       }
     },
-    "ModifyLambdaFunction": {
+    "ModifyMongoLambdaFunction": {
       "Type": "AWS::Lambda::Function",
       "Properties": {
         "Code": {
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/stakinet/development/1499183824093-2017-07-04T15:57:04.093Z/stakinet.zip"
+          "S3Key": "serverless/stakinet/development/1499257344779-2017-07-05T12:22:24.779Z/stakinet.zip"
         },
-        "FunctionName": "stakinet-development-modify",
-        "Handler": "handler.modify",
+        "FunctionName": "stakinet-development-modifyMongo",
+        "Handler": "handler.modifyMongo",
         "MemorySize": 1024,
         "Role": {
           "Fn::GetAtt": [
@@ -124,18 +124,18 @@
         }
       },
       "DependsOn": [
-        "ModifyLogGroup",
+        "ModifyMongoLogGroup",
         "IamRoleLambdaExecution"
       ]
     },
-    "ModifyLambdaVersioniSxojvtyiVOajMaArJjB5FIAwTLvwUAiByzLywXYJ0": {
+    "ModifyMongoLambdaVersionL1yQaJZ9geF8w7uyxVZF3LEzbg8s8NWZIKj5dU997oI": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
-          "Ref": "ModifyLambdaFunction"
+          "Ref": "ModifyMongoLambdaFunction"
         },
-        "CodeSha256": "iSxojvtyiVOajMaArJjB5FIAwTLv+wUAiByzLywXYJ0="
+        "CodeSha256": "L1yQaJZ9geF8w7uyxVZF3LEzbg8s8NWZIKj5dU997oI="
       }
     },
     "ApiGatewayRestApi": {
@@ -231,7 +231,7 @@
                 ":lambda:path/2015-03-31/functions/",
                 {
                   "Fn::GetAtt": [
-                    "ModifyLambdaFunction",
+                    "ModifyMongoLambdaFunction",
                     "Arn"
                   ]
                 },
@@ -386,7 +386,7 @@
         ]
       }
     },
-    "ApiGatewayDeployment1499183824146": {
+    "ApiGatewayDeployment1499257344834": {
       "Type": "AWS::ApiGateway::Deployment",
       "Properties": {
         "RestApiId": {
@@ -398,12 +398,12 @@
         "ApiGatewayMethodModifyPost"
       ]
     },
-    "ModifyLambdaPermissionApiGateway": {
+    "ModifyMongoLambdaPermissionApiGateway": {
       "Type": "AWS::Lambda::Permission",
       "Properties": {
         "FunctionName": {
           "Fn::GetAtt": [
-            "ModifyLambdaFunction",
+            "ModifyMongoLambdaFunction",
             "Arn"
           ]
         },
@@ -438,10 +438,10 @@
         "Ref": "ServerlessDeploymentBucket"
       }
     },
-    "ModifyLambdaFunctionQualifiedArn": {
+    "ModifyMongoLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "ModifyLambdaVersioniSxojvtyiVOajMaArJjB5FIAwTLvwUAiByzLywXYJ0"
+        "Ref": "ModifyMongoLambdaVersionL1yQaJZ9geF8w7uyxVZF3LEzbg8s8NWZIKj5dU997oI"
       }
     },
     "ServiceEndpoint": {

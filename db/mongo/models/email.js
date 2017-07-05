@@ -14,6 +14,20 @@ AWS.config.update({
 const ses = new AWS.SES();
 
 export default (db) => {
+  emailSchema.statics.dropCollection  = collectionName =>
+  new Promise((resolve, reject) => {
+    Email
+    .remove({})
+    .exec()
+    .then((result) => {
+      console.log('\nSuccessfully removed all Documents on the ', collectionName, ' collection.\nResult: ', result);
+      resolve(result);
+    })
+    .catch((error) => {
+      console.log('\nERROR trying to drop collection ', collectionName);
+      reject(error);
+    });
+  });
   /**
   * 1) Validate required fields exist.
   * 2) Create a new email.

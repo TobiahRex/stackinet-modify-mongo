@@ -4,7 +4,7 @@ import { Promise as bbPromise } from 'bluebird';
 import handleModification from './handleModification';
 import verifyDB from './db/mongo/connection';
 
-module.exports.modify = (event, context) => {
+module.exports.modifyMongo = (event, context) => {
   console.log('\nEVENT: ', JSON.stringify(event, null, 2));
 
   if (
@@ -18,7 +18,6 @@ module.exports.modify = (event, context) => {
   verifyDB(event.body.databaseName)
   .then(dbModels => {
     console.log('\nSuccessfully retrieved ', event.body.databaseName.toUpperCase(), '\ndbModels: ', dbModels);
-    dbModels.MarketHero.find({}).exec().then(console.log);
     handleModification({ event, dbModel: dbModels[event.body.collectionName] });
   })
   .then((result) => {
