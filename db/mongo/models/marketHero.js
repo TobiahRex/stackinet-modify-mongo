@@ -9,24 +9,18 @@ export default (db) => {
   new Promise((resolve, reject) => {
     console.log('\nDropping ', collectionName, ' collection...');
     console.log('MarketHero.exec: ', MarketHero.exec);
-    return MarketHero.find({}).exec()
-    .then(result => {
-      console.log('\nFound something...', result);
-      resolve(result);
+
+    return MarketHero
+    .remove({})
+    .exec()
+    .then((result) => {
+      console.log(`Successfully dropped collection ${collectionName}.  RESULT = ${result}`);
+      return resolve(result);
     })
-    .catch(error => {
-      console.log('\nERROR at FIND: ', error);
-      reject(error);
-    })
-    // return bbPromise.fromCallback(cb => MarketHero.remove({}, cb))
-    // .then((result) => {
-    //   console.log('\nSuccessfully removed all Documents on the ', collectionName, ' collection.\nResult: ', result);
-    //   return resolve(result);
-    // })
-    // .catch((error) => {
-    //   console.log('\nERROR trying to drop collection ', collectionName, '\nERROR: ', error);
-    //   return reject(error);
-    // });
+    .catch((error) => {
+      console.log(`Error trying to drop collection "${collectionName}".  ERROR = ${error}`);
+      return reject(error);
+    });
   });
 
   console.log('\n\nCreating MarketHero collection...');

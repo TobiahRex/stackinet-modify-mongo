@@ -19,18 +19,11 @@ new Promise((resolve, reject) => {
 
   const { operationName, collectionName } = event.body;
   console.log('event: ', event);
-  const Model = dbModels[collectionName];
-  console.log('Model: ', Model);
 
-  return Model.find({}).exec()
-  .then((results) => {
-    console.log('\n\nFOUND! ', results);
-    resolve(results);
-  })
-  .catch((error) => {
-    console.log('\n\nERROR! ', error);
-    reject(JSON.stringify(error));
-  });
+  return dbModels[collectionName]
+  .dropCollection()
+  .then(resolve)
+  .catch(reject);
   // switch (operationName) {
   //   case 'dropCollection': {
   //     const Model = dbModels[collectionName];
