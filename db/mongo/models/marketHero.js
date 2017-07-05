@@ -8,7 +8,6 @@ export default (db) => {
   marketHeroSchema.statics.dropCollection  = collectionName =>
   new Promise((resolve, reject) => {
     console.log('\nDropping ', collectionName, ' collection...');
-    console.log('MarketHero.exec: ', MarketHero.exec);
 
     return MarketHero
     .remove({})
@@ -19,6 +18,26 @@ export default (db) => {
     })
     .catch((error) => {
       console.log(`Error trying to drop collection "${collectionName}".  ERROR = ${error}`);
+      return reject(error);
+    });
+  });
+
+  marketHeroSchema.statics.updateDoc = (id, eventBody) =>
+  new Promise((resolve, reject) => {
+    delete eventBody.collectionName;
+    delete eventBody.databaseName;
+    delete eventBody.operationName;
+
+    const updateArgs = Object.assign({}, eventBody);
+    MarketHero
+    .findByIdAndUpdate(id, { $set: updateArgs }, { new: true })
+    .exec()
+    .then((result) => {
+      console.log(`Successfully updated collection ${collectionName}.  RESULT = ${result}`);
+      return resolve(result);
+    })
+    .catch((error) => {
+      console.log(`Error trying to update collection "${collectionName}".  ERROR = ${error}`);
       return reject(error);
     });
   });
