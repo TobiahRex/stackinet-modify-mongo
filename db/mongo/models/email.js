@@ -14,6 +14,14 @@ AWS.config.update({
 const ses = new AWS.SES();
 
 export default (db) => {
+  /**
+  * 1) Validate required fields exist.
+  * 2) Create a new email.
+  *
+  * @param {object} fields - Required fields for creating new Email.
+  *
+  * @return {object} - Promise: resolved - Email details.
+  */
   emailSchema.statics.dropCollection  = collectionName =>
   new Promise((resolve, reject) => {
     console.log('\nDropping ', collectionName, ' collection...');
@@ -38,6 +46,8 @@ export default (db) => {
   */
   emailSchema.statics.createEmail = fields =>
   new Promise((resolve, reject) => {
+    if (!fields) return reject(`Missing required arguments. "fields": ${fields || 'undefined'}`);
+
     const {
       type,
       purpose,
@@ -100,11 +110,11 @@ export default (db) => {
     .findByIdAndUpdate({ _id: eventBody.id }, { $set: updateArgs }, { new: true })
     .exec()
     .then((result) => {
-      console.log(`Successfully updated collection ${collectionName}.  RESULT = ${result}`);
+      console.log(`Successfully updated collection ${eventBody.collectionName}.  RESULT = ${result}`);
       return resolve(result);
     })
     .catch((error) => {
-      console.log(`Error trying to update collection "${collectionName}".  ERROR = ${error}`);
+      console.log(`Error trying to update collection "${eventBody.collectionName}".  ERROR = ${error}`);
       return reject(error);
     });
   });
