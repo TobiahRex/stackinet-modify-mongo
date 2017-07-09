@@ -68,7 +68,7 @@ const productSchema = new Schema({
     },
   },
   reviews: [{
-    reviews_id: { type: ObjectId, ref: 'Reviews' },
+    review_id: { type: ObjectId, ref: 'Reviews' },
     user_id: { type: ObjectId, ref: 'User' },
   }],
   distribution: {

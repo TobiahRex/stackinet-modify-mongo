@@ -3,6 +3,52 @@ import { Promise as bbPromise } from 'bluebird';
 import productSchema from '../schemas/product';
 
 export default (db) => {
+  /**
+  * 1) Remove all documents instances.
+  *
+  * @param {string} collectionName - name of collection - only used to Verify operation accuracy with console.logs.
+  *
+  * @return {object} - Promise: resolved - Email details.
+  */
+  productSchema.statics.dropCollection  = collectionName =>
+  new Promise((resolve, reject) => {
+    console.log('\nDropping ', collectionName, ' collection...');
+
+    return bbPromise.fromCallback(cb => Product.remove({}, cb))
+    .then((result) => {
+      console.log('\nSuccessfully removed all Documents on the ', collectionName, ' collection.\nResult: ', result);
+      resolve(result);
+    })
+    .catch((error) => {
+      console.log('\nERROR trying to drop collection ', collectionName);
+      reject(error);
+    });
+  });
+
+  /**
+  * 1) Remove single document instance.
+  *
+  * @param {string} id - Mongo _id of the document to remove.
+  *
+  * @return {object} - Promise: resolved - Email details.
+  */
+  productSchema.statics.removeOne = ({ id }) =>
+  new Promise((resolve, reject) => {
+    if (!id) return reject(`Missing required arguments. "id": ${id || 'undefined'}`);
+
+    Product
+    .findByIdAndRemove(id)
+    .exec()
+    .then((deletedDoc) => {
+      console.log('\nSuccessfully removed _id: ', deletedDoc._id);
+      resolve(deletedDoc);
+    })
+    .catch((error) => {
+      console.log(`Error trying to remove document with _id "${id}"`);
+      reject(`Error trying to remove document with _id "${id}"`);
+    });
+  });
+
   productSchema.statics.findProductsByFlavor = flavor =>
   new Promise((resolve, reject) => {
     Product.find({ 'product.flavor': flavor })
@@ -53,18 +99,21 @@ export default (db) => {
   });
 
 
-  productSchema.statics.createProduct = (product, statistics) =>
+  productSchema.statics.createProduct = (eventBody) =>
   new Promise((resolve, reject) => {
-    bbPromise.fromCallback(cb => Product.create({ product, statistics }, cb))
-    .then((newProduct) => {
-      console.log('\n//mongo/model/product.js\n @ createProduct RESOLVE\n', newProduct);
-      resolve(newProduct);
+    const createArgs = Object.assign({}, eventBody);
+    delete createArgs.databaseName;
+    delete createArgs.operationName;
+    delete createArgs.collectionName;
+
+    bbPromise.fromCallback(cb => Product.create({ ...createArgs }, cb))
+    .then((newDoc) => {
+      console.log('Successfully create a new document on collection: ', eventBody.collectionName);
+      resolve(newDoc);
     })
     .catch((error) => {
-      reject({
-        problem: `Could not create a new product with this product object: ${JSON.stringify({ product }, null, 2)}
-        Mongoose Error = ${error}`,
-      });
+      console.log('\nERROR while trying to create a new document.\nCheck arguments: ', JSON.stringify(createArgs, null, 2));
+      reject(error);
     });
   });
 

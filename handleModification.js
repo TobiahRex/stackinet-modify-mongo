@@ -42,22 +42,12 @@ new Promise((resolve, reject) => {
       .catch(reject);
     }
 
-    // case 'create': {
-    //   console.log('\ncreating document...');
-    //   const createArgs = Object.assign({}, event.body);
-    //   delete createArgs.databaseName;
-    //   delete createArgs.operationName;
-    //   delete createArgs.collectionName;
-    //   bbPromise.fromCallback(cb => dbModel.create({ ...createArgs }, cb))
-    //   .then((newDoc) => {
-    //     console.log('Successfully create a new document on collection: ', event.body.collectionName);
-    //     resolve(newDoc);
-    //   })
-    //   .catch((error) => {
-    //     console.log('\nERROR while trying to create a new document.\nCheck arguments: ', JSON.stringify(createArgs, null, 2));
-    //     reject(error);
-    //   });
-    // } break;
+    case 'create': {
+      return dbModels[collectionName]
+      .createProduct(event.body)
+      .then(resolve)
+      .catch(reject);
+    }
 
     default: {
       console.log('\n\nNo operation executed.  Verify input arguments.');

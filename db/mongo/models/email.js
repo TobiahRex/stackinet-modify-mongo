@@ -70,17 +70,18 @@ export default (db) => {
 
   emailSchema.statics.removeOne = ({ id }) =>
   new Promise((resolve, reject) => {
-    if (!eventBody) return reject(`Missing required arguments. "id": ${id || 'undefined'}`);
+    if (!id) return reject(`Missing required arguments. "id": ${id || 'undefined'}`);
 
     Email
-    .findByIdAndRemove(event.body.id)
+    .findByIdAndRemove(id)
     .exec()
     .then((deletedDoc) => {
       console.log('\nSuccessfully removed _id: ', deletedDoc._id);
       resolve(deletedDoc);
     })
     .catch((error) => {
-      console.log('\nCould not delete Document with _id: ', event.body.id, '\nERROR: ', error);
+      console.log(`Error trying to remove document with _id "${id}"`);
+      reject(`Error trying to remove document with _id "${id}"`);
     });
   });
 
