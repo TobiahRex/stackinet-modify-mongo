@@ -60,11 +60,8 @@ export default (db) => {
       resolve(dbProducts);
     })
     .catch((error) => {
-      reject({
-        problem: `Could not find any products with flavor ${flavor}.
-
-        Mongo Error = ${error}`,
-      });
+      console.log(`Error trying to query for products with flavor "${flavor}". ERROR = ${error}`);
+      reject(`Error trying to query for products with flavor "${flavor}". ERROR = ${error}`);
     });
   });
 
@@ -79,11 +76,10 @@ export default (db) => {
         console.log('Found multiple Products.: ', dbProducts);
         resolve(dbProducts);
       })
-      .catch(error => reject(`
-        problem: Could not fetch multiple products.
-
-        Mongo Error = ${error}.
-      `));
+      .catch(error => {
+        console.log(`Error trying to fetch multiple products with ids "${ids}".`);
+        reject(`Error trying to fetch multiple products with ids "${ids}".`);
+      });
     }
   });
 
@@ -112,8 +108,8 @@ export default (db) => {
       resolve(newDoc);
     })
     .catch((error) => {
-      console.log('\nERROR while trying to create a new document.\nCheck arguments: ', JSON.stringify(createArgs, null, 2));
-      reject(error);
+      console.log(`Error while trying to create new Product document.  ERROR = ${error}`);
+      reject(`Error while trying to create new Product document.  ERROR = ${error}`);
     });
   });
 
@@ -126,10 +122,8 @@ export default (db) => {
       resolve(dbProduct);
     })
     .catch((error) => {
-      reject({
-        problem: `Could not find the product with id ${_id}.  Are you sure that product exists?
-        Mongo Error = ${error}`,
-      });
+      console.log(`Error while trying to find Product by id "${id}".`);
+      reject(`Error while trying to find Product by id "${id}".`);
     });
   });
 
@@ -170,10 +164,10 @@ export default (db) => {
         `);
       resolve(updatedProduct);
     })
-    .catch(error => reject({
-      problem: `Could not find the product with id ${_id}. Are you sure that product exists?
-      Mongo Error = ${error}`,
-    }));
+    .catch(error => {
+      console.log(`Error while trying to find Product by id "${id}" and update.`);
+      reject(`Error while trying to find Product by id "${id}" and update.`);
+    });
   });
 
   productSchema.statics.getPopularProducts = qty =>
