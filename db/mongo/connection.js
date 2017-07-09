@@ -70,31 +70,32 @@ new Promise((resolve, reject) => {
     } break;
     case 'nj2jp': {
       if (
-        cachedDb.nj2jpConnection &&
-        (cachedDb.nj2jpConnection._readyState === 1)
+        cachedDb.nj2jp.connection &&
+        (cachedDb.nj2jp.connection._readyState === 1)
       ) {
-        console.log('cachedDb.nj2jpConnection._readyState: ', cachedDb.nj2jpConnection._readyState, '\nFound previous Nj2jp CONNECTION\n', '\nCurrent NJ2JP Connections: ', cachedDb.nj2jpConnection.base.connections);
-        resolve(cachedDb.nj2jpDbModels);
+        console.log('cachedDb.nj2jpConnection._readyState: ', cachedDb.nj2jp.connection._readyState, '\nFound previous Nj2jp CONNECTION\n', '\nCurrent NJ2JP Connections: ', cachedDb.nj2jp.connection.base.connections);
+        resolve(cachedDb.nj2jp);
       } else {
-        const connection = mongoose.createConnection(nj2jpMongo, console.log);
-        console.log('CREATED NEW CONNECTION: ', connection);
+        const connection = mongoose.createConnection(nj2jpMongo, { replset: { poolSize: 100 }});
+        console.log(`CREATED NEW ${dbName} CONNECTION: `, connection);
 
         cachedDb = {
           ...cachedDb,
-          nj2jpConnection: connection,
-          nj2jpDbModels: {
-            User: createUserModel(connection),
-            Product: createProductModel(connection),
+          nj2jp: {
+            connection,
+            dbModels: {
+              User: createUserModel(connection),
+              Product: createProductModel(connection),
+            },
           },
         };
 
-        console.log('\nSaved ', dbName, ' to "cachedDb".');
-        resolve(cachedDb.nj2jpDbModels);
+        resolve(cachedDb.nj2jp);
       }
     } break;
     default: {
-      console.log('\nError that db name did not match any databases in the Stakinet cluster.');
-      reject('That dbName did not match any databases in the Stakinet cluster.');
+      console.log('\nError that dbName did not match any databases in the Stakinet cluster.');
+      reject('Error that dbName did not match any databases in the Stakinet cluster.');
     } break;
   }
 });

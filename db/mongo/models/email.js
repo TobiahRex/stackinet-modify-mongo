@@ -15,10 +15,9 @@ const ses = new AWS.SES();
 
 export default (db) => {
   /**
-  * 1) Validate required fields exist.
-  * 2) Create a new email.
+  * 1) Remove all documents instances.
   *
-  * @param {object} fields - Required fields for creating new Email.
+  * @param {string} collectionName - name of collection - only used to Verify operation accuracy with console.logs.
   *
   * @return {object} - Promise: resolved - Email details.
   */
