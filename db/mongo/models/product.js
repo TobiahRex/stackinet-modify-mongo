@@ -88,10 +88,10 @@ export default (db) => {
     Product.findByIdAndRemove(_id)
     .exec()
     .then(resolve)
-    .catch(error => reject({
-      problem: `Could not create a delete product with _id:${_id}.  Verify the id is valid.
-      Mongoose Error = ${error}`,
-    }));
+    .catch(error => {
+      console.log(`Error while trying to fetch multiple products with ids "${ids}".  ERROR = ${error}`);
+      reject(`Error while trying to fetch multiple products with ids "${ids}".  ERROR = ${error}`);
+    });
   });
 
 
@@ -122,8 +122,8 @@ export default (db) => {
       resolve(dbProduct);
     })
     .catch((error) => {
-      console.log(`Error while trying to find Product by id "${id}".`);
-      reject(`Error while trying to find Product by id "${id}".`);
+      console.log(`Error while trying to find Product by id "${id}". ERROR = ${error}.`);
+      reject(`Error while trying to find Product by id "${id}". ERROR = ${error}.`);
     });
   });
 
@@ -165,8 +165,8 @@ export default (db) => {
       resolve(updatedProduct);
     })
     .catch(error => {
-      console.log(`Error while trying to find Product by id "${id}" and update.`);
-      reject(`Error while trying to find Product by id "${id}" and update.`);
+      console.log(`Error while trying to find Product by id "${id}" and update. ERROR = ${error}.`);
+      reject(`Error while trying to find Product by id "${id}" and update. ERROR = ${error}.`);
     });
   });
 
@@ -186,15 +186,13 @@ export default (db) => {
     ])
     .exec()
     .then((dbProducts) => {
-      console.log(`
-        Found the following products: ${JSON.stringify(dbProducts, null, 2)}
-      `);
+      console.log('\nFound the following products. ', dbProducts);
       resolve(dbProducts);
     })
-    .catch(error => reject({
-      problem: `Could not fetch the ${qty} products you requested.
-      Mongo Error = ${error}`,
-    }));
+    .catch(error => {
+      console.log(`Error while trying to get "${qty}" Popular products.  ERROR = ${error}.`);
+      reject(`Error while trying to get "${qty}" Popular products.  ERROR = ${error}.`);
+    });
   });
 
   console.log('\n\nCreating Product collection...');
