@@ -20,8 +20,8 @@ export default (db) => {
       resolve(result);
     })
     .catch((error) => {
-      console.log('\nERROR trying to drop collection ', collectionName);
-      reject(error);
+      console.log(`Error while trying to drop collection "${collectionName}".  ERROR = ${error}.`);
+      reject(`Error while trying to drop collection "${collectionName}".  ERROR = ${error}.`);
     });
   });
 
@@ -44,8 +44,8 @@ export default (db) => {
       resolve(deletedDoc);
     })
     .catch((error) => {
-      console.log(`Error trying to remove document with _id "${id}"`);
-      reject(`Error trying to remove document with _id "${id}"`);
+      console.log(`Error trying to remove document with _id "${id}".  ERROR = ${error}.`);
+      reject(`Error trying to remove document with _id "${id}".  ERROR = ${error}.`);
     });
   });
 
