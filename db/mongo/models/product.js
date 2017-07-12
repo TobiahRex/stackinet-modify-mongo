@@ -16,7 +16,7 @@ export default (db) => {
 
     return bbPromise.fromCallback(cb => Product.remove({}, cb))
     .then((result) => {
-      console.log('\nSuccessfully removed all Documents on the ', collectionName, ' collection.\nResult: ', result);
+      console.log('\nSuccessfuly dropped collection.  Result = ', result);
       resolve(result);
     })
     .catch((error) => {
