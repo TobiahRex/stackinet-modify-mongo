@@ -1,45 +1,87 @@
 /* eslint-disable no-use-before-define, no-console, import/newline-after-import */
-import axios from 'axios';
 import { Promise as bbPromise } from 'bluebird';
-import marketHeroSchema from '../schemas/marketHero';
-require('dotenv').load({ silent: true });
+import marketHeroSchema from '../schemas/MarketHero';
 
 export default (db) => {
+  /**
+  * 1) Remove all documents instances.
+  *
+  * @param {string} collectionName - name of collection - only used to Verify operation accuracy with console.logs.
+  *
+  * @return {object} - Promise: resolved - MarketHero details.
+  */
   marketHeroSchema.statics.dropCollection  = collectionName =>
   new Promise((resolve, reject) => {
-    console.log('\nDropping ', collectionName, ' collection...');
+    console.log('\n\n@MarketHero.dropCollection');
 
-    return MarketHero
-    .remove({})
-    .exec()
+    return bbPromise.fromCallback(cb => MarketHero.remove({}, cb))
     .then((result) => {
-      console.log(`Successfully dropped collection ${collectionName}.  RESULT = ${result}`);
-      return resolve(result);
+      console.log('\nSuccessfully removed all Documents on the ', collectionName, ' collection.\nResult: ', result);
+      resolve(result);
     })
     .catch((error) => {
-      console.log(`Error trying to drop collection "${collectionName}".  ERROR = ${error}`);
-      return reject(error);
+      console.log('\nERROR trying to drop collection ', collectionName);
+      reject(error);
     });
+  });
+  /**
+  * 1) Validate required fields exist.
+  * 2) Create a new MarketHero.
+  *
+  * @param {object} fields - Required fields for creating new MarketHero.
+  *
+  * @return {object} - Promise: resolved - MarketHero details.
+  */
+  marketHeroSchema.statics.createMarketHero = fields =>
+  new Promise((resolve, reject) => {
+  console.log('\n\n@MarketHero.createMarketHero');
+
+    if (!fields) return reject(`Missing required arguments. "fields": ${fields || 'undefined'}`);
+
+    const {
+      type,
+      purpose,
+      language,
+      subjectData,
+      bodyHtmlData,
+      bodyTextData,
+      replyToAddress,
+    } = fields;
+
+    if (!type || !purpose || !language || !replyToAddress || !subjectData || !bodyHtmlData || !bodyTextData) {
+      reject({ error: 'Missing required fields to create a new MarketHero.', ...fields });
+    } else {
+      bbPromise.fromCallback(cb => MarketHero.create({ ...fields }, cb))
+      .then((newMarketHero) => {
+        console.log('\nSuccessfully created new MarketHero!\n _id: ', newMarketHero._id);
+        resolve(newMarketHero);
+      });
+    }
   });
 
   marketHeroSchema.statics.removeOne = ({ id }) =>
   new Promise((resolve, reject) => {
-    if (!eventBody) return reject(`Missing required arguments. "id": ${id || 'undefined'}`);
+    console.log('\n\n@MarketHero.removeOne');
+
+    if (!id) return reject(`Missing required arguments. "id": ${id || 'undefined'}`);
 
     MarketHero
-    .findByIdAndRemove(event.body.id)
+    .findByIdAndRemove(id)
     .exec()
     .then((deletedDoc) => {
       console.log('\nSuccessfully removed _id: ', deletedDoc._id);
       resolve(deletedDoc);
     })
     .catch((error) => {
-      console.log('\nCould not delete Document with _id: ', event.body.id, '\nERROR: ', error);
+      console.log(`Error trying to remove document with _id "${id}"`);
+      reject(`Error trying to remove document with _id "${id}"`);
     });
   });
 
   marketHeroSchema.statics.updateDoc = (eventBody) =>
   new Promise((resolve, reject) => {
+    console.log('\n\n@MarketHero.updateDoc');
+
     if (!eventBody) return reject(`Missing required arguments. "eventBody": ${eventBody || 'undefined'}`);
 
     delete eventBody.collectionName;
@@ -47,15 +89,27 @@ export default (db) => {
     delete eventBody.operationName;
 
     const updateArgs = Object.assign({}, eventBody);
+    Object.keys(updateArgs)
+    .forEach(key => {
+      if (/\[\]/gi.test(updateArgs[key])) {
+        try {
+          updateArgs[key] = JSON.parse(updateArgs[key]);
+        } catch (error) {
+          reject(`ERROR while trying to parse input string array into array literal.  ERROR = ${error}.`);
+          return null;
+        }
+      }
+    });
+
     MarketHero
-    .findByIdAndUpdate(id, { $set: updateArgs }, { new: true })
+    .findByIdAndUpdate({ _id: eventBody.id }, { $set: updateArgs }, { new: true })
     .exec()
     .then((result) => {
-      console.log(`Successfully updated collection ${collectionName}.  RESULT = ${result}`);
+      console.log(`Successfully updated collection ${eventBody.collectionName}.  RESULT = ${result}`);
       return resolve(result);
     })
     .catch((error) => {
-      console.log(`Error trying to update collection "${collectionName}".  ERROR = ${error}`);
+      console.log(`Error trying to update collection "${eventBody.collectionName}".  ERROR = ${error}`);
       return reject(error);
     });
   });

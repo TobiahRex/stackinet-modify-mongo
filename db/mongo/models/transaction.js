@@ -1,6 +1,6 @@
 /* eslint-disable no-use-before-define, no-console, import/newline-after-import */
 import { Promise as bbPromise } from 'bluebird';
-import sagawaSchema from '../schemas/Sagawa';
+import transactionSchema from '../schemas/Transaction';
 
 export default (db) => {
   /**
@@ -8,13 +8,13 @@ export default (db) => {
   *
   * @param {string} collectionName - name of collection - only used to Verify operation accuracy with console.logs.
   *
-  * @return {object} - Promise: resolved - Sagawa details.
+  * @return {object} - Promise: resolved - Transaction details.
   */
-  sagawaSchema.statics.dropCollection  = collectionName =>
+  transactionSchema.statics.dropCollection  = collectionName =>
   new Promise((resolve, reject) => {
-    console.log('\n\n@Sagawa.dropCollection');
+    console.log('\n\n@Transaction.dropCollection');
 
-    return bbPromise.fromCallback(cb => Sagawa.remove({}, cb))
+    return bbPromise.fromCallback(cb => Transaction.remove({}, cb))
     .then((result) => {
       console.log('\nSuccessfully removed all Documents on the ', collectionName, ' collection.\nResult: ', result);
       resolve(result);
@@ -24,14 +24,48 @@ export default (db) => {
       reject(error);
     });
   });
-
-  sagawaSchema.statics.removeOne = ({ id }) =>
+  /**
+  * 1) Validate required fields exist.
+  * 2) Create a new Transaction.
+  *
+  * @param {object} fields - Required fields for creating new Transaction.
+  *
+  * @return {object} - Promise: resolved - Transaction details.
+  */
+  transactionSchema.statics.createTransaction = fields =>
   new Promise((resolve, reject) => {
-    console.log('\n\n@Sagawa.removeOne');
+  console.log('\n\n@Transaction.createTransaction');
+
+    if (!fields) return reject(`Missing required arguments. "fields": ${fields || 'undefined'}`);
+
+    const {
+      type,
+      purpose,
+      language,
+      subjectData,
+      bodyHtmlData,
+      bodyTextData,
+      replyToAddress,
+    } = fields;
+
+    if (!type || !purpose || !language || !replyToAddress || !subjectData || !bodyHtmlData || !bodyTextData) {
+      reject({ error: 'Missing required fields to create a new Transaction.', ...fields });
+    } else {
+      bbPromise.fromCallback(cb => Transaction.create({ ...fields }, cb))
+      .then((newTransaction) => {
+        console.log('\nSuccessfully created new Transaction!\n _id: ', newTransaction._id);
+        resolve(newTransaction);
+      });
+    }
+  });
+
+  transactionSchema.statics.removeOne = ({ id }) =>
+  new Promise((resolve, reject) => {
+    console.log('\n\n@Transaction.removeOne');
 
     if (!id) return reject(`Missing required arguments. "id": ${id || 'undefined'}`);
 
-    Sagawa
+    Transaction
     .findByIdAndRemove(id)
     .exec()
     .then((deletedDoc) => {
@@ -44,9 +78,9 @@ export default (db) => {
     });
   });
 
-  sagawaSchema.statics.updateDoc = (eventBody) =>
+  transactionSchema.statics.updateDoc = (eventBody) =>
   new Promise((resolve, reject) => {
-    console.log('\n\n@Sagawa.updateDoc');
+    console.log('\n\n@Transaction.updateDoc');
 
     if (!eventBody) return reject(`Missing required arguments. "eventBody": ${eventBody || 'undefined'}`);
 
@@ -55,9 +89,7 @@ export default (db) => {
     delete eventBody.operationName;
 
     const updateArgs = Object.assign({}, eventBody);
-
-    Object
-    .keys(updateArgs)
+    Object.keys(updateArgs)
     .forEach(key => {
       if (/\[\]/gi.test(updateArgs[key])) {
         try {
@@ -69,8 +101,8 @@ export default (db) => {
       }
     });
 
-    Sagawa
-    .findByIdAndUpdate(eventBody.id, { $set: updateArgs }, { new: true })
+    Transaction
+    .findByIdAndUpdate({ _id: eventBody.id }, { $set: updateArgs }, { new: true })
     .exec()
     .then((result) => {
       console.log(`Successfully updated collection ${eventBody.collectionName}.  RESULT = ${result}`);
@@ -82,6 +114,7 @@ export default (db) => {
     });
   });
 
-  const Sagawa = db.model('Sagawa', sagawaSchema);
-  return Sagawa;
+  console.log('\n\nCreating Transaction collection...');
+  const Transaction = db.model('Transaction', transactionSchema);
+  return Transaction;
 };

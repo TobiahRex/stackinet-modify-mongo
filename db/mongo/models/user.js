@@ -1,172 +1,117 @@
-/* eslint-disable no-use-before-define, no-console */
+/* eslint-disable no-use-before-define, no-console, import/newline-after-import */
 import { Promise as bbPromise } from 'bluebird';
-import userSchema from '../schemas/user';
+import userSchema from '../schemas/User';
 
 export default (db) => {
-  userSchema.statics.fetchUserProfile = userId =>
+  /**
+  * 1) Remove all documents instances.
+  *
+  * @param {string} collectionName - name of collection - only used to Verify operation accuracy with console.logs.
+  *
+  * @return {object} - Promise: resolved - User details.
+  */
+  userSchema.statics.dropCollection  = collectionName =>
   new Promise((resolve, reject) => {
-    User.findById(userId).exec()
-    .then((dbUser) => {
-      console.log(`
-        User Found: ${dbUser._id}
-        Sending updated profile to Client.
-      `);
-      resolve(dbUser);
+    console.log('\n\n@User.dropCollection');
+
+    return bbPromise.fromCallback(cb => User.remove({}, cb))
+    .then((result) => {
+      console.log('\nSuccessfully removed all Documents on the ', collectionName, ' collection.\nResult: ', result);
+      resolve(result);
     })
-    .catch(error => reject(`
-      Could Not find a user with this is: ${userId}
-
-      Mongo ERROR: ${error}
-      `),
-    );
+    .catch((error) => {
+      console.log('\nERROR trying to drop collection ', collectionName);
+      reject(error);
+    });
   });
-
-  userSchema.statics.loginOrRegister = args =>
+  /**
+  * 1) Validate required fields exist.
+  * 2) Create a new User.
+  *
+  * @param {object} fields - Required fields for creating new User.
+  *
+  * @return {object} - Promise: resolved - User details.
+  */
+  userSchema.statics.createUser = fields =>
   new Promise((resolve, reject) => {
-    const auth0Id = args.auth0Id;
-    const loginType = args.loginType;
-    delete args.auth0Id;
-    delete args.loginType;
+  console.log('\n\n@User.createUser');
 
-    User.findOne({ 'authentication.auth0Identities.user_id': auth0Id })
-    .exec()
-    .then((dbUser) => {
-      if (!dbUser) return User.registerUser(args);
-      return User.loginUser(loginType, dbUser, args);
-    })
-    .then(resolve)
-    .catch(error => reject({ problem: error }));
-  });
+    if (!fields) return reject(`Missing required arguments. "fields": ${fields || 'undefined'}`);
 
-  userSchema.statics.loginUser = (loginType, dbUser, userObj) =>
-  new Promise((resolve) => {
-    console.log('Found Existing User.\n');
-    dbUser.authentication.totalLogins += 1;
-    dbUser.authentication.logins.push(userObj.authenticationLogins.pop());
-    dbUser.contactInfo.location = { ...userObj.contactInfoLocation };
-    dbUser.shopping.cart = [...userObj.shoppingCart];
-    dbUser.socialProfileBlob[loginType] = userObj.socialProfileBlob[loginType];
-
-    dbUser.save({ validateBeforeSave: true })
-    .then(resolve);
-  });
-
-  userSchema.statics.registerUser = userObj =>
-  new Promise((resolve, reject) => {
     const {
-      name,
-      pictures,
-      authentication,
-      authenticationLogins,
-      authenticationAuth0Identities,
-      contactInfo,
-      contactInfoLocation,
-      contactInfoDevices,
-      contactInfoSocialNetworks,
-      shopping,
-      shoppingCart,
-      permissions,
-      userStory,
-      socialProfileBlob,
-    } = userObj;
+      type,
+      purpose,
+      language,
+      subjectData,
+      bodyHtmlData,
+      bodyTextData,
+      replyToAddress,
+    } = fields;
 
-    bbPromise.fromCallback(cb => User.create({
-      name,
-      pictures,
-      authentication: {
-        ...authentication,
-        logins: [...authenticationLogins],
-        auth0Identities: [...authenticationAuth0Identities],
-      },
-      contactInfo: {
-        ...contactInfo,
-        location: { ...contactInfoLocation },
-        devices: [...contactInfoDevices],
-        socialNetworks: [...contactInfoSocialNetworks],
-      },
-      shopping: {
-        ...shopping,
-        cart: [...shoppingCart],
-      },
-      permissions,
-      userStory,
-      socialProfileBlob,
-    }, cb))
-    .then((newUser) => {
-      console.log('\nNew User created!: ', newUser._id, '\nName: ', newUser.name.display, '\n');
-      resolve(newUser);
-    })
-    .catch(reject);
-  });
-
-  userSchema.statics.addToMemberCart = ({ userId, qty, nicotineStrength, product }) =>
-  new Promise((resolve, reject) => {
-    User.findById(userId)
-    .exec()
-    .then((dbUser) => {
-      dbUser.shopping.cart.push({
-        qty,
-        product,
-        nicotineStrength,
+    if (!type || !purpose || !language || !replyToAddress || !subjectData || !bodyHtmlData || !bodyTextData) {
+      reject({ error: 'Missing required fields to create a new User.', ...fields });
+    } else {
+      bbPromise.fromCallback(cb => User.create({ ...fields }, cb))
+      .then((newUser) => {
+        console.log('\nSuccessfully created new User!\n _id: ', newUser._id);
+        resolve(newUser);
       });
-      return dbUser.save({ validateBeforeSave: true });
+    }
+  });
+
+  userSchema.statics.removeOne = ({ id }) =>
+  new Promise((resolve, reject) => {
+    console.log('\n\n@User.removeOne');
+
+    if (!id) return reject(`Missing required arguments. "id": ${id || 'undefined'}`);
+
+    User
+    .findByIdAndRemove(id)
+    .exec()
+    .then((deletedDoc) => {
+      console.log('\nSuccessfully removed _id: ', deletedDoc._id);
+      resolve(deletedDoc);
     })
-    .then((savedUser) => {
-      console.log('Saved product to the User\'s Shopping Cart!');
-      resolve(savedUser);
-    })
-    .catch(error => reject({
-      problem: `Could not save to the Users shopping cart.
-      args: {
-        userId: ${userId},
-        qty: ${qty},
-        nicotineStrength: ${nicotineStrength},
-        product: ${product},
+    .catch((error) => {
+      console.log(`Error trying to remove document with _id "${id}"`);
+      reject(`Error trying to remove document with _id "${id}"`);
+    });
+  });
+
+  userSchema.statics.updateDoc = (eventBody) =>
+  new Promise((resolve, reject) => {
+    console.log('\n\n@User.updateDoc');
+
+    if (!eventBody) return reject(`Missing required arguments. "eventBody": ${eventBody || 'undefined'}`);
+
+    delete eventBody.collectionName;
+    delete eventBody.databaseName;
+    delete eventBody.operationName;
+
+    const updateArgs = Object.assign({}, eventBody);
+    Object.keys(updateArgs)
+    .forEach(key => {
+      if (/\[\]/gi.test(updateArgs[key])) {
+        try {
+          updateArgs[key] = JSON.parse(updateArgs[key]);
+        } catch (error) {
+          reject(`ERROR while trying to parse input string array into array literal.  ERROR = ${error}.`);
+          return null;
+        }
       }
-      Mongo Error: ${error}`,
-    }));
-  });
+    });
 
-  userSchema.statics.deleteFromCart = ({ userId, productId }) =>
-  new Promise((resolve, reject) => {
-    User.findById(userId)
+    User
+    .findByIdAndUpdate({ _id: eventBody.id }, { $set: updateArgs }, { new: true })
     .exec()
-    .then((dbUser) => {
-      dbUser.shopping.cart = dbUser.shopping.cart
-      .filter(({ product }) => String(product) !== String(productId));
-      return dbUser.save({ validateBeforeSave: true });
+    .then((result) => {
+      console.log(`Successfully updated collection ${eventBody.collectionName}.  RESULT = ${result}`);
+      return resolve(result);
     })
-    .then((savedUser) => {
-      console.log(`
-        Deleted Product: ${productId} from User: ${savedUser._id}.
-      `);
-      resolve(savedUser);
-    })
-    .catch(error => reject(`
-      Could not Delete Product: ${productId} from User: ${userId}.
-      Mongo Error = ${error}
-    `));
-  });
-
-  userSchema.statics.editToMemberCart = ({ userId, products }) =>
-  new Promise((resolve, reject) => {
-    User.findById(userId)
-    .exec()
-    .then((dbUser) => {
-      dbUser.shopping.cart = products;
-      return dbUser.save({ validateBeforeSave: true });
-    })
-    .then((updatedUser) => {
-      console.log(`
-        Updated user shopping cart!
-      `);
-      resolve(updatedUser);
-    })
-    .catch(error => reject(`
-      Could not Update User: ${userId}.
-
-      Mongo Error = ${error}
-    `));
+    .catch((error) => {
+      console.log(`Error trying to update collection "${eventBody.collectionName}".  ERROR = ${error}`);
+      return reject(error);
+    });
   });
 
   console.log('\n\nCreating User collection...');
