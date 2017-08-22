@@ -10,9 +10,9 @@ const emailSchema = new Schema({
   replyToAddress: { type: String, required: true },
   subjectData: { type: String, required: true },
   subjectCharset: { type: String, default: 'utf8' },
-  bodyHtmlData: { type: String, required: true },
+  bodyHtmlData: { type: String },
   bodyHtmlCharset: { type: String, default: 'utf8' },
-  bodyTextData: { type: String, requried: true },
+  bodyTextData: { type: String },
   bodyTextCharset: { type: String, default: 'utf8' },
   sentEmails: [{
     messageId: { type: String },
