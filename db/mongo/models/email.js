@@ -43,7 +43,7 @@ export default (db) => {
   *
   * @return {object} - Promise: resolved - Email details.
   */
-  emailSchema.statics.createEmail = fields =>
+  emailSchema.statics.createDoc = fields =>
   new Promise((resolve, reject) => {
   console.log('\n\n@Email.createEmail');
 

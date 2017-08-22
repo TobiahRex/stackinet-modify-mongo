@@ -1,9 +1,10 @@
 /* eslint-disable no-console, no-constant-condition, no-unused-vars */
 import mongoose from 'mongoose';
 import createEmailModel from './models/email';
-import createComplaintModel from './models/complaint';
 import createMarketHeroModel from './models/marketHero';
 import createProductModel from './models/product';
+import createSagawaModel from './models/sagawa';
+import createTransactionModel from './models/transaction';
 import createUserModel from './models/user';
 
 mongoose.Promise = Promise;
@@ -59,7 +60,6 @@ new Promise((resolve, reject) => {
             connection,
             dbModels: {
               Email: createEmailModel(connection),
-              Complaint: createComplaintModel(connection),
               MarketHero: createMarketHeroModel(connection),
             },
           },
@@ -84,8 +84,12 @@ new Promise((resolve, reject) => {
           nj2jp: {
             connection,
             dbModels: {
-              User: createUserModel(connection),
+              Email: createEmailModel(connection),
+              MarketHero: createMarketHeroModel(connection),
               Product: createProductModel(connection),
+              Sagawa: createSagawaModel(connection),
+              Transaction: createTransactionModel(connection),
+              User: createUserModel(connection),
             },
           },
         };

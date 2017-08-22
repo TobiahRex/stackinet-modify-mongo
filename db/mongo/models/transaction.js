@@ -24,41 +24,7 @@ export default (db) => {
       reject(error);
     });
   });
-  /**
-  * 1) Validate required fields exist.
-  * 2) Create a new Transaction.
-  *
-  * @param {object} fields - Required fields for creating new Transaction.
-  *
-  * @return {object} - Promise: resolved - Transaction details.
-  */
-  transactionSchema.statics.createTransaction = fields =>
-  new Promise((resolve, reject) => {
-  console.log('\n\n@Transaction.createTransaction');
-
-    if (!fields) return reject(`Missing required arguments. "fields": ${fields || 'undefined'}`);
-
-    const {
-      type,
-      purpose,
-      language,
-      subjectData,
-      bodyHtmlData,
-      bodyTextData,
-      replyToAddress,
-    } = fields;
-
-    if (!type || !purpose || !language || !replyToAddress || !subjectData || !bodyHtmlData || !bodyTextData) {
-      reject({ error: 'Missing required fields to create a new Transaction.', ...fields });
-    } else {
-      bbPromise.fromCallback(cb => Transaction.create({ ...fields }, cb))
-      .then((newTransaction) => {
-        console.log('\nSuccessfully created new Transaction!\n _id: ', newTransaction._id);
-        resolve(newTransaction);
-      });
-    }
-  });
-
+  
   transactionSchema.statics.removeOne = ({ id }) =>
   new Promise((resolve, reject) => {
     console.log('\n\n@Transaction.removeOne');

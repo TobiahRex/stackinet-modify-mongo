@@ -32,7 +32,7 @@ export default (db) => {
   *
   * @return {object} - Promise: resolved - User details.
   */
-  userSchema.statics.createUser = fields =>
+  userSchema.statics.createDoc = fields =>
   new Promise((resolve, reject) => {
   console.log('\n\n@User.createUser');
 

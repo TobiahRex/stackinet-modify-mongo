@@ -28,7 +28,7 @@ new Promise((resolve, reject) => {
       .catch(reject);
     }
 
-    case 'deleteOne': {
+    case 'removeOne': {
       return dbModels[collectionName]
       .removeOne(event.body)
       .then(resolve)
@@ -42,9 +42,9 @@ new Promise((resolve, reject) => {
       .catch(reject);
     }
 
-    case 'create': {
+    case 'createDoc': {
       return dbModels[collectionName]
-      .createProduct(event.body)
+      .createDoc(event.body)
       .then(resolve)
       .catch(reject);
     }

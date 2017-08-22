@@ -24,41 +24,7 @@ export default (db) => {
       reject(error);
     });
   });
-  /**
-  * 1) Validate required fields exist.
-  * 2) Create a new MarketHero.
-  *
-  * @param {object} fields - Required fields for creating new MarketHero.
-  *
-  * @return {object} - Promise: resolved - MarketHero details.
-  */
-  marketHeroSchema.statics.createMarketHero = fields =>
-  new Promise((resolve, reject) => {
-  console.log('\n\n@MarketHero.createMarketHero');
-
-    if (!fields) return reject(`Missing required arguments. "fields": ${fields || 'undefined'}`);
-
-    const {
-      type,
-      purpose,
-      language,
-      subjectData,
-      bodyHtmlData,
-      bodyTextData,
-      replyToAddress,
-    } = fields;
-
-    if (!type || !purpose || !language || !replyToAddress || !subjectData || !bodyHtmlData || !bodyTextData) {
-      reject({ error: 'Missing required fields to create a new MarketHero.', ...fields });
-    } else {
-      bbPromise.fromCallback(cb => MarketHero.create({ ...fields }, cb))
-      .then((newMarketHero) => {
-        console.log('\nSuccessfully created new MarketHero!\n _id: ', newMarketHero._id);
-        resolve(newMarketHero);
-      });
-    }
-  });
-
+  
   marketHeroSchema.statics.removeOne = ({ id }) =>
   new Promise((resolve, reject) => {
     console.log('\n\n@MarketHero.removeOne');
