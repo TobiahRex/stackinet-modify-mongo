@@ -24,7 +24,7 @@ export default (db) => {
       reject(error);
     });
   });
-  
+
   marketHeroSchema.statics.removeOne = ({ id }) =>
   new Promise((resolve, reject) => {
     console.log('\n\n@MarketHero.removeOne');
