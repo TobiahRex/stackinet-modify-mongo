@@ -21,7 +21,7 @@ export default (db) => {
   *
   * @return {object} - Promise: resolved - Email details.
   */
-  emailSchema.statics.dropCollection  = collectionName =>
+  sagawaSchema.statics.dropCollection  = collectionName =>
   new Promise((resolve, reject) => {
     console.log('\n\n@Email.dropCollection');
 
