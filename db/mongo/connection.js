@@ -6,6 +6,7 @@ import createProductModel from './models/product';
 import createSagawaModel from './models/sagawa';
 import createTransactionModel from './models/transaction';
 import createUserModel from './models/user';
+import createReportModel from './models/report';
 
 mongoose.Promise = Promise;
 const dotenv = require('dotenv').config({ silent: true }); //eslint-disable-line
@@ -90,6 +91,7 @@ new Promise((resolve, reject) => {
               Sagawa: createSagawaModel(connection),
               Transaction: createTransactionModel(connection),
               User: createUserModel(connection),
+              Report: createReportModel(connection),
             },
           },
         };

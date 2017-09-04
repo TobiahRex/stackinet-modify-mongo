@@ -1,6 +1,6 @@
 /* eslint-disable no-use-before-define, no-console, import/newline-after-import */
 import { Promise as bbPromise } from 'bluebird';
-import transactionSchema from '../schemas/Transaction';
+import transactionSchema from '../schemas/transaction';
 
 export default (db) => {
   /**
@@ -24,7 +24,7 @@ export default (db) => {
       reject(error);
     });
   });
-  
+
   transactionSchema.statics.removeOne = ({ id }) =>
   new Promise((resolve, reject) => {
     console.log('\n\n@Transaction.removeOne');

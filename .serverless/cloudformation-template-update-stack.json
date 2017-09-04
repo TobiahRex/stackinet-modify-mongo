@@ -95,7 +95,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/stakinet/development/1503385217541-2017-08-22T07:00:17.541Z/stakinet.zip"
+          "S3Key": "serverless/stakinet/development/1503992363495-2017-08-29T07:39:23.495Z/stakinet.zip"
         },
         "FunctionName": "stakinet-development-modifyMongo",
         "Handler": "handler.modifyMongo",
@@ -111,7 +111,8 @@
         "Environment": {
           "Variables": {
             "LONESMOKE_MONGO_URI": "mongodb://stackinet:odV9WmWq1Tm752KO@stackinet-cluster-shard-00-00-wqafo.mongodb.net:27017,stackinet-cluster-shard-00-01-wqafo.mongodb.net:27017,stackinet-cluster-shard-00-02-wqafo.mongodb.net:27017/lonesmoke-development?ssl=true&replicaSet=stackinet-cluster-shard-0&authSource=admin",
-            "NJ2JP_MONGO_URI": "mongodb://stackinet:odV9WmWq1Tm752KO@stackinet-cluster-shard-00-00-wqafo.mongodb.net:27017,stackinet-cluster-shard-00-01-wqafo.mongodb.net:27017,stackinet-cluster-shard-00-02-wqafo.mongodb.net:27017/nj2jp-development?ssl=true&replicaSet=stackinet-cluster-shard-0&authSource=admin"
+            "NJ2JP_MONGO_URI": "mongodb://stackinet:odV9WmWq1Tm752KO@stackinet-cluster-shard-00-00-wqafo.mongodb.net:27017,stackinet-cluster-shard-00-01-wqafo.mongodb.net:27017,stackinet-cluster-shard-00-02-wqafo.mongodb.net:27017/nj2jp-development?ssl=true&replicaSet=stackinet-cluster-shard-0&authSource=admin",
+            "PASSWORD": "stackinet)(*&-modifyMongo"
           }
         },
         "VpcConfig": {
@@ -128,14 +129,14 @@
         "IamRoleLambdaExecution"
       ]
     },
-    "ModifyMongoLambdaVersionKyjcrF4CaPpaX1br4951ReHvM5YIpZeAmKSVVjxjg8": {
+    "ModifyMongoLambdaVersionhGGPgnZnBaBVOWBwmvls3OoEhkZoq5n4tDEYs8B5Sqg": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "ModifyMongoLambdaFunction"
         },
-        "CodeSha256": "KyjcrF4CaPpaX1br4951ReHvM5YIpZeAmKS/VVjxjg8="
+        "CodeSha256": "hGGPgnZnBaBVOWBwmvls3OoEhkZoq5n4tDEYs8B5Sqg="
       }
     },
     "ApiGatewayRestApi": {
@@ -386,7 +387,7 @@
         ]
       }
     },
-    "ApiGatewayDeployment1503385217593": {
+    "ApiGatewayDeployment1503992363549": {
       "Type": "AWS::ApiGateway::Deployment",
       "Properties": {
         "RestApiId": {
@@ -441,7 +442,7 @@
     "ModifyMongoLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "ModifyMongoLambdaVersionKyjcrF4CaPpaX1br4951ReHvM5YIpZeAmKSVVjxjg8"
+        "Ref": "ModifyMongoLambdaVersionhGGPgnZnBaBVOWBwmvls3OoEhkZoq5n4tDEYs8B5Sqg"
       }
     },
     "ServiceEndpoint": {

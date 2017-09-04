@@ -15,6 +15,7 @@ provider:
   environment:
     LONESMOKE_MONGO_URI: ${file(./config.yml):lonesmokeMongoUri}
     NJ2JP_MONGO_URI: ${file(./config.yml):nj2jpMongoUri}
+    PASSWORD: ${file(./config.yml):password}
 
 plugins:
   - serverless-webpack

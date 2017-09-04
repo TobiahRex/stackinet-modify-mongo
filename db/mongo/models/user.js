@@ -1,6 +1,6 @@
 /* eslint-disable no-use-before-define, no-console, import/newline-after-import */
 import { Promise as bbPromise } from 'bluebird';
-import userSchema from '../schemas/User';
+import userSchema from '../schemas/user';
 
 export default (db) => {
   /**

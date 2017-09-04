@@ -1,6 +1,6 @@
 /* eslint-disable no-use-before-define, no-console, import/newline-after-import */
 import { Promise as bbPromise } from 'bluebird';
-import sagawaSchema from '../schemas/Sagawa';
+import sagawaSchema from '../schemas/sagawa';
 
 export default (db) => {
   /**
