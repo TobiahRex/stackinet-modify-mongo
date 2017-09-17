@@ -1,5 +1,3 @@
-import { getDate as GetDate } from './helpers';
-
 const Schema = require('mongoose').Schema;
 
 export const ObjectId = Schema.Types.ObjectId;
@@ -15,7 +13,7 @@ const reportSchema = new Schema({
     default: '',
     required: true,
   },
-  created: { type: String, default: GetDate },
+  created: { type: String, default: Date.now },
   messageId: { type: String, default: '' },
   mainTitle: { type: String, default: '', required: true },
   subTitle: { type: String, default: '', required: true },

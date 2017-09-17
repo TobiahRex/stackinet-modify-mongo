@@ -49,6 +49,22 @@ new Promise((resolve, reject) => {
       .catch(reject);
     }
 
+    case 'fetchAll': {
+      return dbModels[collectionName]
+      .find({})
+      .exec()
+      .then(resolve)
+      .catch(reject);
+    }
+
+    case 'fetchDoc': {
+      return dbModels[collectionName]
+      .find({})
+      .exec()
+      .then(resolve)
+      .catch(reject);
+    }
+
     default: {
       console.log('\n\nNo operation executed.  Verify input arguments.');
       reject('No operation executed.  Verify input arguments.');
